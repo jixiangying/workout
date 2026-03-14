@@ -1345,10 +1345,13 @@
             if (startVal) filtered = filtered.filter(h => h.timestamp >= new Date(startVal).setHours(0,0,0,0));
             if (endVal) filtered = filtered.filter(h => h.timestamp <= new Date(endVal).setHours(23,59,59,999));
             if (filtered.length === 0) { container.innerHTML = '<div class="empty-state">暂无记录</div>'; return; }
-            container.innerHTML = filtered.map(h => `
+            container.innerHTML = filtered.map(h => {
+                const mEmoji = getDisplayEmoji('muscle', h.muscleName, h.muscleEmoji);
+                const eEmoji = getDisplayEmoji('equip', h.equipmentName, h.equipmentEmoji);
+                return `
                 <div class="history-item">
                     <div class="history-item-content">
-                        <div><span class="tag">${h.muscleEmoji} ${h.muscleName}</span><span class="tag tag-equipment">${h.equipmentEmoji} ${h.equipmentName}</span><span style="color:#666;font-size:13px;">${h.duration}分钟</span></div>
+                        <div><span class="tag">${mEmoji} ${h.muscleName}</span><span class="tag tag-equipment">${eEmoji} ${h.equipmentName}</span><span style="color:#666;font-size:13px;">${h.duration}分钟</span></div>
                         ${h.notes ? `<div class="history-notes">📝 ${h.notes}</div>` : ''}
                     </div>
                     <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;">
@@ -1359,7 +1362,7 @@
                         </div>
                     </div>
                 </div>
-            `).join('');
+            `}).join('');
         }
 
         function openEditModal(index) {
@@ -1416,7 +1419,9 @@
             function buildDist(data, type) {
                 const counts = {};
                 data.forEach(h => {
-                    const key = type === 'muscle' ? h.muscleName : h.equipmentName;
+                    const name = type === 'muscle' ? h.muscleName : h.equipmentName;
+                    const emoji = getDisplayEmoji(type === 'muscle' ? 'muscle' : 'equip', name, type === 'muscle' ? h.muscleEmoji : h.equipmentEmoji);
+                    const key = `${emoji} ${name}`;
                     counts[key] = (counts[key] || 0) + (type === 'muscle' ? h.duration : 1);
                 });
                 const sorted = Object.entries(counts).sort((a,b) => b[1] - a[1]);
@@ -1443,6 +1448,47 @@
         }
 
         // --- Common Helpers ---
+        function getDisplayEmoji(type, name, recordEmoji) {
+            const list = type === 'muscle' ? USER_CONFIG.muscles : USER_CONFIG.equipment;
+            const match = list.find(x => x.name === name);
+            return match ? match.emoji : recordEmoji;
+        }
+
+        function exportHistory() {
+            if (history.length === 0) {
+                alert('没有可导出的训练记录');
+                return;
+            }
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(history, null, 2));
+            const downloadAnchorNode = document.createElement('a');
+            downloadAnchorNode.setAttribute("href", dataStr);
+            downloadAnchorNode.setAttribute("download", "workout_history_" + new Date().toLocaleDateString('zh-CN').replace(/\//g, '-') + ".json");
+            document.body.appendChild(downloadAnchorNode);
+            downloadAnchorNode.click();
+            downloadAnchorNode.remove();
+        }
+
+        function importHistory(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const imported = JSON.parse(e.target.result);
+                    if (!Array.isArray(imported)) throw new Error('Invalid format');
+                    if (confirm(`成功读取 ${imported.length} 条记录，这会覆盖当前记录，是否继续？`)) {
+                        history = imported;
+                        localStorage.setItem('workoutHistory', JSON.stringify(history));
+                        updateHistory();
+                        updateStats();
+                        alert('✅ 导入成功！');
+                    }
+                } catch(err) { alert('导入失败：文件格式错误'); }
+                event.target.value = '';
+            };
+            reader.readAsText(file);
+        }
+
         function closeEditModal() { document.getElementById('edit-modal').classList.remove('show'); editingIndex = -1; }
         function deleteRecord(i) { if(confirm('删除？')){ history.splice(i,1); localStorage.setItem('workoutHistory', JSON.stringify(history)); updateHistory(); updateStats(); } }
         function clearFilters() { document.getElementById('filter-start').value=''; document.getElementById('filter-end').value=''; updateHistory(); }
