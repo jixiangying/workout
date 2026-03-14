@@ -79,7 +79,7 @@
 
         .grid {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
+            grid-template-columns: repeat(2, minmax(0, 1fr));
             gap: 12px;
         }
 
@@ -296,18 +296,39 @@
 
         .video-info {
             flex: 1;
+            min-width: 0;
         }
 
         .video-title {
             font-size: 13px;
             font-weight: 500;
             color: #333;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .video-meta {
             font-size: 11px;
             color: #999;
             margin-top: 2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .btn-group-equal {
+            display: flex;
+            gap: 10px;
+            margin-top: 12px;
+        }
+
+        .btn-group-equal .btn {
+            flex: 1;
+            padding: 8px 12px;
+            font-size: 13px;
+            margin-top: 0;
+            white-space: nowrap;
         }
 
         .stat-box {
@@ -680,14 +701,13 @@
                     <div id="config-video-list" style="max-height: 200px; overflow-y: auto;"></div>
                 </div>
 
-                <!-- 配置备份 -->
                 <div class="card card-full">
                     <div class="card-title">💾 配置备份</div>
-                    <div style="display: flex; gap: 10px;">
-                        <button class="btn" onclick="exportConfig()">⬇️ 导出完整配置</button>
-                        <button class="btn btn-secondary" onclick="document.getElementById('import-config-file').click()">⬆️ 导入完整配置</button>
+                    <div class="btn-group-equal">
+                        <button class="btn" onclick="exportConfig()">⬇️ 导出配置</button>
+                        <button class="btn btn-secondary" onclick="document.getElementById('import-config-file').click()">⬆️ 导入配置</button>
                         <input type="file" id="import-config-file" style="display: none" accept=".json" onchange="importConfig(event)">
-                        <button class="btn btn-danger" style="width: auto;" onclick="resetConfig()">⚠️ 重置默认</button>
+                        <button class="btn btn-danger" onclick="resetConfig()">⚠️ 重置默认</button>
                     </div>
                 </div>
             </div>
@@ -907,8 +927,8 @@
 
     <script>
         // --- 核心配置管理 ---
-        const MUSCLE_EMOJIS = ["🏋️", "💪", "🦵", "🏃", "🔥", "🚣‍♂️", "👗", "🧘", "🤸", "🤸‍♂️", "🤾", "🏇", "🥊", "🏊", "🚴"];
-        const EQUIP_EMOJIS = ["🤸", "🏋️", "🥌", "🧘", "🎗️", "⛷️", "🪄", "🔩", "🛹", "⚽", "🚲", "🏠", "🥤", "⏱️", "📏"];
+        const MUSCLE_EMOJIS = ["🏋️", "💪", "🦵", "🏃", "🔥", "🚣‍♂️", "👗", "🧘", "🤸", "🤸‍♂️", "🤾", "🏇", "🥊", "🏊", "🚴", "🏀", "🏈", "⚾️", "🎾", "🏐", "🏉", "🎱", "🏓", "🏸", "🏒", "🏑", "🏏", "⛳️", "🏹", "🎿", "🛹", "⛸", "🏄", "🧗", "🥋", "🥅", "🎯"];
+        const EQUIP_EMOJIS = ["🤸", "🏋️", "🥌", "🧘", "🎗️", "⛷️", "🪄", "🔩", "🛹", "⚽", "🚲", "🏠", "🥤", "⏱️", "📏", "🎒", "👟", "👠", "👢", "👕", "👔", "👗", "🧤", "🧣", "📱", "💻", "📺", "📷", "💡", "🔦", "📔", "📕", "📖", "📜", "📝", "📁", "✂️", "⚖️", "🛠", "🔨", "🔧", "🔩", "⚙️", "🔫", "💣", "🔪", "🛡", "💊", "💉", "🌡", "🛋", "🪑", "🛏", "🛒", "⌚️", "⏰", "⏱", "🛎", "🧼", "🧽", "🧴", "🧺", "🧹", "💎", "🏀", "🏈", "⚾️", "🎾", "🏐", "🏉", "🎱", "🏓", "🏸", "🏒", "🏑", "🏏", "⛳️", "🏹", "🎿", "⛸", "🏄", "🧗", "🥋", "🥅", "🎯"];
 
         const DEFAULT_CONFIG = {
             muscles: [
