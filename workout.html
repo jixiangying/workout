@@ -1,0 +1,1430 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>今天练什么</title>
+    <link rel="icon" type="image/svg+xml"
+        href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💪</text></svg>">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #764ba2;
+            --secondary: #667eea;
+            --bg: #f5f7fa;
+            --card-bg: rgba(255, 255, 255, 0.85);
+            --text: #2d3436;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%);
+            min-height: 100vh;
+            padding: 16px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            color: white;
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 28px;
+        }
+
+        .tab-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 12px;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            border-radius: 10px;
+            cursor: pointer;
+            color: white;
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        .tab.active {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(10px);
+            color: #764ba2;
+        }
+
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.1);
+        }
+
+        .card-full {
+            grid-column: span 2;
+        }
+
+        .card-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .recommendation-card {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr;
+            min-height: 280px;
+            background: linear-gradient(135deg, rgba(255,255,255,0.9), rgba(255,255,255,0.7));
+            overflow: hidden;
+            border-radius: 16px;
+        }
+
+        .recommend-draw-area {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            border-right: 1px solid rgba(118, 75, 162, 0.1);
+        }
+
+        .recommend-slot {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            position: relative;
+        }
+
+        .recommend-slot:first-child {
+            border-right: 1px dashed rgba(118, 75, 162, 0.1);
+        }
+
+        .recommend-tips-area {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 30px;
+            background: rgba(118, 75, 162, 0.02);
+        }
+
+        .slot-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: #a29bfe;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .slot-emoji {
+            font-size: 72px; /* 调整为更均衡的大小 */
+            line-height: 1;
+            margin-bottom: 15px;
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.08));
+        }
+
+        .slot-name-wrap {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .slot-name {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--primary);
+            letter-spacing: -0.5px;
+        }
+
+        .dice-btn {
+            background: none !important;
+            border: none !important;
+            font-size: 28px;
+            cursor: pointer;
+            padding: 4px;
+            line-height: 1;
+            transition: transform 0.2s;
+            opacity: 0.5;
+        }
+
+        .dice-btn:hover {
+            opacity: 1;
+            transform: scale(1.2) rotate(15deg);
+        }
+
+        .tips-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .tips-content {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.7;
+            font-style: italic;
+        }
+
+        .reason-text {
+            font-size: 14px;
+            color: #666;
+            margin-top: 8px;
+            line-height: 1.5;
+        }
+
+        .btn {
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 12px;
+            font-weight: 500;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .form-group {
+            margin-bottom: 12px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 6px;
+            font-weight: 500;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .form-group select,
+        .form-group input {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .video-card {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .video-card:hover {
+            transform: translateY(-2px);
+            background: white;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .video-thumb {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #a18cd1, #fbc2eb);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+            margin-right: 10px;
+        }
+
+        .video-info {
+            flex: 1;
+        }
+
+        .video-title {
+            font-size: 13px;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .video-meta {
+            font-size: 11px;
+            color: #999;
+            margin-top: 2px;
+        }
+
+        .stat-box {
+            text-align: center;
+            padding: 16px;
+            background: #f8f9fa;
+            border-radius: 12px;
+        }
+
+        .stat-num {
+            font-size: 32px;
+            font-weight: bold;
+            color: #764ba2;
+        }
+
+        .stat-label {
+            font-size: 13px;
+            color: #666;
+            margin-top: 4px;
+        }
+
+        .history-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .history-item:last-child {
+            border: none;
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 3px 8px;
+            background: #e9ecef;
+            border-radius: 4px;
+            font-size: 11px;
+            margin-right: 4px;
+        }
+
+        .tag-equipment {
+            background: #667eea;
+            color: white;
+        }
+
+        .history-actions {
+            display: flex;
+            gap: 4px;
+        }
+
+        .btn-small {
+            padding: 4px 10px;
+            font-size: 11px;
+            width: auto;
+            margin: 0;
+        }
+
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #666;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+        }
+
+        .progress-bar {
+            margin-bottom: 10px;
+        }
+
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            margin-bottom: 4px;
+        }
+
+        .progress-track {
+            background: #e9ecef;
+            border-radius: 4px;
+            height: 8px;
+        }
+
+        .progress-fill {
+            background: linear-gradient(135deg, #a18cd1, #fbc2eb);
+            border-radius: 4px;
+            height: 100%;
+        }
+
+        .advice-item {
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+            font-size: 14px;
+            color: #555;
+        }
+
+        .advice-item:last-child {
+            border: none;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 24px;
+            width: 90%;
+            max-width: 400px;
+        }
+
+        .modal-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 16px;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 16px;
+        }
+
+        .modal-actions .btn {
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            flex: 1;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 30px;
+            color: #999;
+            font-size: 14px;
+        }
+
+        .stats-section-header {
+            font-size: 16px;
+            font-weight: bold;
+            color: #764ba2;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .stats-grid-2col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .stats-column {
+            background: rgba(255, 255, 255, 0.4);
+            border-radius: 12px;
+            padding: 16px;
+            box-shadow: inset 0 2px 4px rgba(255, 255, 255, 0.5), 0 4px 12px rgba(31, 38, 135, 0.05);
+        }
+
+        .mini-stat-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            padding-bottom: 12px;
+            border-bottom: 1px dashed rgba(118, 75, 162, 0.2);
+        }
+
+        .mini-stat-row:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .mini-stat-label {
+            font-size: 13px;
+            color: #666;
+            font-weight: 500;
+        }
+
+        .mini-stat-value {
+            font-size: 20px;
+            font-weight: bold;
+            color: #764ba2;
+        }
+
+        .history-item-content { flex: 1; }
+        .history-notes {
+            font-size: 12px;
+            color: #888;
+            margin-top: 4px;
+            background: rgba(0,0,0,0.02);
+            padding: 4px 8px;
+            border-radius: 4px;
+            max-width: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            display: inline-block;
+        }
+
+        /* 过滤器样式 */
+        .filter-bar {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px dashed rgba(118, 75, 162, 0.2);
+            flex-wrap: wrap;
+        }
+
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .filter-group label {
+            font-size: 13px;
+            color: #666;
+            font-weight: 500;
+        }
+
+        .filter-group input[type="date"] {
+            padding: 6px 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 13px;
+            background: rgba(255, 255, 255, 0.5);
+            color: #764ba2;
+            outline: none;
+        }
+
+        .btn-link {
+            background: none;
+            border: none;
+            color: #764ba2;
+            font-size: 13px;
+            cursor: pointer;
+            text-decoration: underline;
+            padding: 0;
+            opacity: 0.7;
+        }
+
+        .btn-link:hover {
+            opacity: 1;
+        }
+
+        #history-list {
+            max-height: 500px;
+            overflow-y: auto;
+            padding-right: 8px;
+        }
+
+        #history-list::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        #history-list::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.05);
+            border-radius: 10px;
+        }
+
+        #history-list::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #a18cd1, #fbc2eb);
+            border-radius: 10px;
+        }
+        .config-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(0,0,0,0.03);
+            padding: 5px 10px;
+            border-radius: 6px;
+            margin-bottom: 4px;
+            font-size: 13px;
+        }
+        .config-item .btn-danger { padding: 2px 6px; font-size: 10px; width: auto; margin: 0; }
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 13px;
+            background: #fff;
+            padding: 4px 8px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            cursor: pointer;
+        }
+        .checkbox-item input { width: auto; margin: 0; }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>💪 今天练什么</h1>
+
+        <div class="tab-container">
+            <div class="tab active" onclick="switchTab('config')">我的配置</div>
+            <div class="tab" onclick="switchTab('recommend')">今日训练</div>
+            <div class="tab" onclick="switchTab('history')">训练记录</div>
+            <div class="tab" onclick="switchTab('stats')">数据统计</div>
+        </div>
+
+        <!-- 配置页面 -->
+        <div id="config-section" class="section active">
+            <div class="grid">
+                <!-- 部位与器械管理 -->
+                <div class="card">
+                    <div class="card-title">🏗️ 基础配置</div>
+                    <div class="form-group">
+                        <label>训练部位</label>
+                        <div id="config-muscle-list" style="margin-bottom: 10px;"></div>
+                        <div style="display: flex; gap: 5px;">
+                            <input type="text" id="new-muscle-name" placeholder="名称" style="flex: 2;">
+                            <select id="new-muscle-emoji" style="flex: 1;"></select>
+                            <button class="btn btn-small" onclick="addMuscle()" style="width: auto;">添加</button>
+                        </div>
+                    </div>
+                    <div style="height: 1px; background: #eee; margin: 15px 0;"></div>
+                    <div class="form-group">
+                        <label>训练工具</label>
+                        <div id="config-equip-list" style="margin-bottom: 10px;"></div>
+                        <div style="display: flex; gap: 5px;">
+                            <input type="text" id="new-equip-name" placeholder="名称" style="flex: 2;">
+                            <select id="new-equip-emoji" style="flex: 1;"></select>
+                            <button class="btn btn-small" onclick="addEquip()" style="width: auto;">添加</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 联动与视频管理 -->
+                <div class="card">
+                    <div class="card-title">🔗 联动与视频库</div>
+                    <div class="form-group">
+                        <label>选择部位配置器械</label>
+                        <select id="config-select-muscle" onchange="renderEquipCheckboxes()"></select>
+                    </div>
+                    <div id="config-equip-checkboxes" style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 15px;"></div>
+                    
+                    <div style="height: 1px; background: #eee; margin: 15px 0;"></div>
+                    
+                    <div class="form-group">
+                        <label>为该组合添加视频 (B站链接)</label>
+                        <select id="config-select-equip" onchange="renderConfigVideoList()"></select>
+                        <div style="display: flex; gap: 5px; margin-top: 8px;">
+                            <input type="text" id="new-video-url" placeholder="粘贴 B 站视频链接" style="flex: 1;">
+                            <button class="btn btn-small" onclick="addVideo()" style="width: auto;">添加</button>
+                        </div>
+                    </div>
+                    <div id="config-video-list" style="max-height: 200px; overflow-y: auto;"></div>
+                </div>
+
+                <!-- 配置备份 -->
+                <div class="card card-full">
+                    <div class="card-title">💾 配置备份</div>
+                    <div style="display: flex; gap: 10px;">
+                        <button class="btn" onclick="exportConfig()">⬇️ 导出完整配置</button>
+                        <button class="btn btn-secondary" onclick="document.getElementById('import-config-file').click()">⬆️ 导入完整配置</button>
+                        <input type="file" id="import-config-file" style="display: none" accept=".json" onchange="importConfig(event)">
+                        <button class="btn btn-danger" style="width: auto;" onclick="resetConfig()">⚠️ 重置默认</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 推荐页面 -->
+        <div id="recommend-section" class="section">
+            <div class="grid">
+                <!-- 今日推荐卡片 -->
+                <div class="card card-full" style="padding: 0; overflow: hidden;">
+                    <div class="recommendation-card">
+                        <!-- 左半部：抽卡区 (嵌套 2 列) -->
+                        <div class="recommend-draw-area">
+                            <!-- 部位 -->
+                            <div class="recommend-slot">
+                                <div class="slot-label">锻炼部位</div>
+                                <div class="slot-emoji" id="emoji">🏋️</div>
+                                <div class="slot-name-wrap">
+                                    <div class="slot-name" id="muscle-group">胸肌</div>
+                                    <button class="dice-btn" onclick="rerollMuscle(this)">🎲</button>
+                                </div>
+                            </div>
+                            <!-- 工具 -->
+                            <div class="recommend-slot">
+                                <div class="slot-label">训练工具</div>
+                                <div class="slot-emoji" id="equipment-emoji">🏋️</div>
+                                <div class="slot-name-wrap">
+                                    <div class="slot-name" id="equipment-name">哑铃</div>
+                                    <button class="dice-btn" onclick="rerollEquipment(this)">🎲</button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 右半部：贴士区 -->
+                        <div class="recommend-tips-area">
+                            <div class="tips-title">💡 运动小贴士</div>
+                            <div class="tips-content" id="workout-tip">
+                                力量训练前，记得进行 5-10 分钟动态拉伸，唤醒肌肉。
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 打卡卡片 -->
+                <div class="card">
+                    <div class="card-title">✅ 打卡</div>
+                    <div class="form-group">
+                        <label>部位</label>
+                        <select id="actual-muscle"></select>
+                    </div>
+                    <div class="form-group">
+                        <label>器械</label>
+                        <select id="actual-equipment"></select>
+                    </div>
+                    <div class="form-group">
+                        <label>时长(分钟)</label>
+                        <input type="number" id="actual-duration" placeholder="30">
+                    </div>
+                    <div class="form-group">
+                        <label>备注</label>
+                        <input type="text" id="actual-notes" placeholder="选填，如重量或动作">
+                    </div>
+                    <button class="btn" onclick="checkIn()">完成打卡</button>
+                </div>
+
+                <!-- 视频卡片 -->
+                <div class="card">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                        <div class="card-title" style="margin-bottom: 0;">📺 跟练视频</div>
+                    </div>
+                    
+                    <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 8px;">
+                        <div style="font-weight: 600; font-size: 14px; color: #666;">🎬 我的专属库</div>
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <div id="video-db-status" style="font-size: 12px; color: #999;"></div>
+                            <span id="sync-status" style="font-size: 11px; color: #4caf50; display: none;">✅ 已同步</span>
+                        </div>
+                    </div>
+                    <div id="video-list-local" style="margin-bottom: 20px;"></div>
+                    
+                    <div style="font-weight: 600; font-size: 14px; color: #666; margin-bottom: 8px;">🔍 探索更多</div>
+                    <div id="video-list-explore"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 历史页面 -->
+        <div id="history-section" class="section">
+            <div class="card">
+                <div class="card-title">📅 训练记录</div>
+                <div class="filter-bar">
+                    <div class="filter-group">
+                        <label>从</label>
+                        <input type="date" id="filter-start" onchange="updateHistory()">
+                    </div>
+                    <div class="filter-group">
+                        <label>至</label>
+                        <input type="date" id="filter-end" onchange="updateHistory()">
+                    </div>
+                    <button class="btn-link" onclick="clearFilters()">清除筛选</button>
+                </div>
+                <div id="history-list"></div>
+            </div>
+
+            <div class="card card-full">
+                <div class="card-title">💾 数据管理</div>
+                <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+                    <button class="btn" onclick="exportHistory()">⬇️ 导出打卡记录</button>
+                    <button class="btn btn-secondary" onclick="document.getElementById('import-file').click()">⬆️ 导入打卡记录</button>
+                    <input type="file" id="import-file" style="display: none" accept=".json" onchange="importHistory(event)">
+                </div>
+            </div>
+        </div>
+
+        <!-- 统计页面 -->
+        <div id="stats-section" class="section">
+            <div class="grid">
+
+                <div class="card card-full">
+                    <div class="stats-section-header">📊 核心数据对比</div>
+                    <div class="stats-grid-2col">
+                        <div class="stats-column">
+                            <div style="font-weight: 600; color: #555; margin-bottom: 16px; text-align: center;">🔥 近 3
+                                天</div>
+                            <div class="mini-stat-row">
+                                <span class="mini-stat-label">训练次数</span>
+                                <span class="mini-stat-value" id="stat-3d-sessions">0</span>
+                            </div>
+                            <div class="mini-stat-row">
+                                <span class="mini-stat-label">总时长(分)</span>
+                                <span class="mini-stat-value" id="stat-3d-duration">0</span>
+                            </div>
+                        </div>
+                        <div class="stats-column">
+                            <div style="font-weight: 600; color: #555; margin-bottom: 16px; text-align: center;">📅 近 7
+                                天</div>
+                            <div class="mini-stat-row">
+                                <span class="mini-stat-label">训练次数</span>
+                                <span class="mini-stat-value" id="stat-7d-sessions">0</span>
+                            </div>
+                            <div class="mini-stat-row">
+                                <span class="mini-stat-label">总时长(分)</span>
+                                <span class="mini-stat-value" id="stat-7d-duration">0</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card card-full">
+                    <div class="card-title">🎯 部位分布对比</div>
+                    <div class="stats-grid-2col">
+                        <div>
+                            <div
+                                style="font-weight: 600; font-size: 13px; color: #666; margin-bottom: 12px; text-align: center;">
+                                🔥 近 3 天</div>
+                            <div id="muscle-distribution-3d"></div>
+                        </div>
+                        <div>
+                            <div
+                                style="font-weight: 600; font-size: 13px; color: #666; margin-bottom: 12px; text-align: center;">
+                                📅 近 7 天</div>
+                            <div id="muscle-distribution-7d"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card card-full">
+                    <div class="card-title">🏋️ 器械分布对比</div>
+                    <div class="stats-grid-2col">
+                        <div>
+                            <div
+                                style="font-weight: 600; font-size: 13px; color: #666; margin-bottom: 12px; text-align: center;">
+                                🔥 近 3 天</div>
+                            <div id="equipment-distribution-3d"></div>
+                        </div>
+                        <div>
+                            <div
+                                style="font-weight: 600; font-size: 13px; color: #666; margin-bottom: 12px; text-align: center;">
+                                📅 近 7 天</div>
+                            <div id="equipment-distribution-7d"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card card-full">
+                    <div class="card-title">💡 综合建议</div>
+                    <div id="advice"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 编辑弹窗 -->
+    <div class="modal" id="edit-modal">
+        <div class="modal-content">
+            <div class="modal-title">编辑记录</div>
+            <div class="form-group">
+                <label>部位</label>
+                <select id="edit-muscle"></select>
+            </div>
+            <div class="form-group">
+                <label>器械</label>
+                <select id="edit-equipment"></select>
+            </div>
+            <div class="form-group">
+                <label>时长(分钟)</label>
+                <input type="number" id="edit-duration">
+            </div>
+            <div class="form-group">
+                <label>备注</label>
+                <input type="text" id="edit-notes">
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-secondary" onclick="closeEditModal()">取消</button>
+                <button class="btn" onclick="saveEdit()">保存</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- 核心配置管理 ---
+        const MUSCLE_EMOJIS = ["🏋️", "💪", "🦵", "🏃", "🔥", "🚣‍♂️", "👗", "🧘", "🤸", "🤸‍♂️", "🤾", "🏇", "🥊", "🏊", "🚴"];
+        const EQUIP_EMOJIS = ["🤸", "🏋️", "🥌", "🧘", "🎗️", "⛷️", "🪄", "🔩", "🛹", "⚽", "🚲", "🏠", "🥤", "⏱️", "📏"];
+
+        const DEFAULT_CONFIG = {
+            muscles: [
+                { id: 'm1', name: '胸肌', emoji: '👗' },
+                { id: 'm2', name: '肩背', emoji: '🚣‍♂️' },
+                { id: 'm3', name: '手臂', emoji: '💪' },
+                { id: 'm4', name: '臀腿', emoji: '🦵' },
+                { id: 'm5', name: '核心', emoji: '🔥' },
+                { id: 'm6', name: '全身', emoji: '🏃' }
+            ],
+            equipment: [
+                { id: 'e1', name: '无器械/自重', emoji: '🤸' },
+                { id: 'e2', name: '哑铃', emoji: '🏋️' },
+                { id: 'e3', name: '弹力带', emoji: '🎗️' }
+            ],
+            relations: {
+                'm1': ['e1', 'e2', 'e3'],
+                'm2': ['e1', 'e2', 'e3'],
+                'm3': ['e1', 'e2', 'e3'],
+                'm4': ['e1', 'e2', 'e3'],
+                'm5': ['e1', 'e2', 'e3'],
+                'm6': ['e1', 'e2', 'e3']
+            },
+            videos: {}
+        };
+
+        let USER_CONFIG = JSON.parse(localStorage.getItem('workout_user_config')) || DEFAULT_CONFIG;
+        let history = JSON.parse(localStorage.getItem('workoutHistory') || '[]');
+
+        function saveConfig(musclesChanged = true) {
+            localStorage.setItem('workout_user_config', JSON.stringify(USER_CONFIG));
+            refreshAllUI(musclesChanged);
+        }
+
+        function refreshAllUI(musclesChanged = true) {
+            renderConfigMuscles();
+            renderConfigEquips();
+            renderEmojiSelects();
+            if (musclesChanged) {
+                renderMuscleOptions();
+            }
+            renderConfigSelects();
+            renderEquipCheckboxes();
+            
+            // Sync current IDs if they were deleted
+            if (!USER_CONFIG.muscles.find(m => m.id === currentMuscleId)) {
+                currentMuscleId = USER_CONFIG.muscles[0]?.id || '';
+            }
+            const compatible = USER_CONFIG.relations[currentMuscleId] || [];
+            if (!compatible.includes(currentEquipmentId)) {
+                currentEquipmentId = compatible[0] || '';
+            }
+
+            syncRecommendationUI();
+            updateHistory();
+            updateStats();
+        }
+
+        // --- 配置页面逻辑 ---
+        function renderEmojiSelects() {
+            const mEmojiSelect = document.getElementById('new-muscle-emoji');
+            const eEmojiSelect = document.getElementById('new-equip-emoji');
+            if (mEmojiSelect && mEmojiSelect.innerHTML === '') {
+                mEmojiSelect.innerHTML = MUSCLE_EMOJIS.map(e => `<option value="${e}">${e}</option>`).join('');
+            }
+            if (eEmojiSelect && eEmojiSelect.innerHTML === '') {
+                eEmojiSelect.innerHTML = EQUIP_EMOJIS.map(e => `<option value="${e}">${e}</option>`).join('');
+            }
+        }
+
+        function renderMuscleOptions() {
+            const mSelect = document.getElementById('config-select-muscle');
+            if (!mSelect) return;
+            const currentVal = mSelect.value;
+            mSelect.innerHTML = USER_CONFIG.muscles.map(m => `<option value="${m.id}">${m.emoji} ${m.name}</option>`).join('');
+            if (currentVal && USER_CONFIG.muscles.find(m => m.id === currentVal)) {
+                mSelect.value = currentVal;
+            }
+        }
+
+        function renderConfigMuscles() {
+            const list = document.getElementById('config-muscle-list');
+            if (!list) return;
+            list.innerHTML = USER_CONFIG.muscles.map(m => `
+                <div class="config-item">
+                    <span>${m.emoji} ${m.name}</span>
+                    <button class="btn btn-danger btn-small" onclick="deleteMuscle('${m.id}')">删除</button>
+                </div>
+            `).join('');
+        }
+
+        function addMuscle() {
+            const name = document.getElementById('new-muscle-name').value.trim();
+            const emoji = document.getElementById('new-muscle-emoji').value;
+            if (!name) return alert('请输入名称');
+            const id = 'm' + Date.now();
+            USER_CONFIG.muscles.push({ id, name, emoji });
+            USER_CONFIG.relations[id] = [];
+            document.getElementById('new-muscle-name').value = '';
+            saveConfig(true);
+        }
+
+        function deleteMuscle(id) {
+            if (!confirm('确定删除？这会移除相关联动和视频')) return;
+            USER_CONFIG.muscles = USER_CONFIG.muscles.filter(m => m.id !== id);
+            delete USER_CONFIG.relations[id];
+            saveConfig(true);
+        }
+
+        function renderConfigEquips() {
+            const list = document.getElementById('config-equip-list');
+            if (!list) return;
+            list.innerHTML = USER_CONFIG.equipment.map(e => `
+                <div class="config-item">
+                    <span>${e.emoji} ${e.name}</span>
+                    <button class="btn btn-danger btn-small" onclick="deleteEquip('${e.id}')">删除</button>
+                </div>
+            `).join('');
+        }
+
+        function addEquip() {
+            const name = document.getElementById('new-equip-name').value.trim();
+            const emoji = document.getElementById('new-equip-emoji').value;
+            if (!name) return alert('请输入名称');
+            const id = 'e' + Date.now();
+            USER_CONFIG.equipment.push({ id, name, emoji });
+            document.getElementById('new-equip-name').value = '';
+            saveConfig(false);
+        }
+
+        function deleteEquip(id) {
+            if (!confirm('确定删除？')) return;
+            USER_CONFIG.equipment = USER_CONFIG.equipment.filter(e => e.id !== id);
+            Object.keys(USER_CONFIG.relations).forEach(mId => {
+                USER_CONFIG.relations[mId] = USER_CONFIG.relations[mId].filter(eid => eid !== id);
+            });
+            saveConfig(false);
+        }
+
+        function renderConfigSelects() {
+            const mSelect = document.getElementById('config-select-muscle');
+            const eSelect = document.getElementById('config-select-equip');
+            if (!mSelect || !eSelect) return;
+            
+            const mId = mSelect.value;
+            const compatible = USER_CONFIG.relations[mId] || [];
+            eSelect.innerHTML = USER_CONFIG.equipment
+                .filter(e => compatible.includes(e.id))
+                .map(e => `<option value="${e.id}">${e.emoji} ${e.name}</option>`).join('');
+        }
+
+        function renderEquipCheckboxes() {
+            const mSelect = document.getElementById('config-select-muscle');
+            if (!mSelect) return;
+            const mId = mSelect.value;
+            if (!mId) return;
+            const container = document.getElementById('config-equip-checkboxes');
+            const selected = USER_CONFIG.relations[mId] || [];
+            
+            container.innerHTML = USER_CONFIG.equipment.map(e => `
+                <label class="checkbox-item">
+                    <input type="checkbox" ${selected.includes(e.id) ? 'checked' : ''} 
+                        onchange="toggleRelation('${mId}', '${e.id}', this.checked)">
+                    ${e.emoji} ${e.name}
+                </label>
+            `).join('');
+            renderConfigSelects();
+            renderConfigVideoList();
+        }
+
+        function toggleRelation(mId, eId, checked) {
+            if (!USER_CONFIG.relations[mId]) USER_CONFIG.relations[mId] = [];
+            if (checked) {
+                if (!USER_CONFIG.relations[mId].includes(eId)) USER_CONFIG.relations[mId].push(eId);
+            } else {
+                USER_CONFIG.relations[mId] = USER_CONFIG.relations[mId].filter(id => id !== eId);
+            }
+            saveConfig(false);
+        }
+
+        function renderConfigVideoList() {
+            const mSelect = document.getElementById('config-select-muscle');
+            const eSelect = document.getElementById('config-select-equip');
+            const container = document.getElementById('config-video-list');
+            if (!mSelect || !eSelect || !container) return;
+            
+            const mId = mSelect.value;
+            const eId = eSelect.value;
+            if (!mId || !eId) { container.innerHTML = ''; return; }
+            
+            const key = `${mId}-${eId}`;
+            const vids = USER_CONFIG.videos[key] || [];
+            container.innerHTML = vids.map((v, i) => `
+                <div class="config-item">
+                    <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${v.title}</span>
+                    <button class="btn btn-danger btn-small" onclick="deleteVideo('${key}', ${i})">删除</button>
+                </div>
+            `).join('') || '<div class="empty-state">暂无视频</div>';
+        }
+
+        async function addVideo() {
+            const urlInput = document.getElementById('new-video-url');
+            const mSelect = document.getElementById('config-select-muscle');
+            const eSelect = document.getElementById('config-select-equip');
+            if (!urlInput || !mSelect || !eSelect) return;
+
+            const url = urlInput.value.trim();
+            const mId = mSelect.value;
+            const eId = eSelect.value;
+            if (!url || !mId || !eId) return alert('请确保选择了部位、器械并填写了链接');
+
+            const key = `${mId}-${eId}`;
+            if (!USER_CONFIG.videos[key]) USER_CONFIG.videos[key] = [];
+            
+            let title = '正在获取标题...';
+            const newVid = { title, url };
+            USER_CONFIG.videos[key].push(newVid);
+            urlInput.value = '';
+            renderConfigVideoList();
+
+            const bvidMatch = url.match(/\/video\/(BV[a-zA-Z0-9]+)/);
+            if (bvidMatch) {
+                const fetchedTitle = await fetchBiliTitleJSONP(bvidMatch[1]);
+                if (fetchedTitle) newVid.title = fetchedTitle;
+            } else {
+                newVid.title = '自定义视频 ' + USER_CONFIG.videos[key].length;
+            }
+            saveConfig();
+        }
+
+        function deleteVideo(key, index) {
+            USER_CONFIG.videos[key].splice(index, 1);
+            saveConfig();
+        }
+
+        function exportConfig() {
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(USER_CONFIG, null, 2));
+            const dl = document.createElement('a');
+            dl.setAttribute("href", dataStr);
+            dl.setAttribute("download", "workout_config.json");
+            dl.click();
+        }
+
+        function importConfig(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const imported = JSON.parse(e.target.result);
+                    if (confirm('导入配置将覆盖当前所有设置，是否继续？')) {
+                        USER_CONFIG = imported;
+                        saveConfig();
+                    }
+                } catch(err) { alert('导入失败'); }
+            };
+            reader.readAsText(file);
+        }
+
+        function resetConfig() {
+            if (confirm('确定重置为默认配置？')) {
+                USER_CONFIG = DEFAULT_CONFIG;
+                saveConfig();
+            }
+        }
+
+        // --- 原有逻辑适配 ---
+        let currentMuscleId = USER_CONFIG.muscles[0]?.id || '';
+        let currentEquipmentId = '';
+
+        function fetchBiliTitleJSONP(bvid) {
+            return new Promise((resolve) => {
+                const callbackName = 'jsonp_bili_' + Math.round(1000000 * Math.random());
+                window[callbackName] = function(data) {
+                    delete window[callbackName];
+                    const scriptEl = document.getElementById(callbackName);
+                    if (scriptEl) document.body.removeChild(scriptEl);
+                    if (data && data.code === 0 && data.data && data.data.title) resolve(data.data.title);
+                    else resolve(null);
+                };
+                const script = document.createElement('script');
+                script.id = callbackName;
+                script.src = `https://api.bilibili.com/x/web-interface/view?bvid=${bvid}&jsonp=jsonp&callback=${callbackName}`;
+                document.body.appendChild(script);
+            });
+        }
+
+        function rerollMuscle(btn) {
+            if (btn) { btn.classList.add('dice-rolling'); setTimeout(() => btn.classList.remove('dice-rolling'), 400); }
+            const m = USER_CONFIG.muscles[Math.floor(Math.random() * USER_CONFIG.muscles.length)];
+            currentMuscleId = m.id;
+            const compatible = USER_CONFIG.relations[m.id] || [];
+            currentEquipmentId = compatible[Math.floor(Math.random() * compatible.length)] || '';
+            syncRecommendationUI();
+        }
+
+        function rerollEquipment(btn) {
+            const compatible = USER_CONFIG.relations[currentMuscleId] || [];
+            if (compatible.length <= 1) return;
+            let newId;
+            do { newId = compatible[Math.floor(Math.random() * compatible.length)]; } while (newId === currentEquipmentId);
+            currentEquipmentId = newId;
+            syncRecommendationUI();
+        }
+
+        function syncRecommendationUI() {
+            const m = USER_CONFIG.muscles.find(x => x.id === currentMuscleId);
+            const e = USER_CONFIG.equipment.find(x => x.id === currentEquipmentId);
+            if (!m || !e) return;
+            document.getElementById('emoji').textContent = m.emoji;
+            document.getElementById('muscle-group').textContent = m.name;
+            document.getElementById('equipment-emoji').textContent = e.emoji;
+            document.getElementById('equipment-name').textContent = e.name;
+            document.getElementById('workout-tip').textContent = TIPS[Math.floor(Math.random() * TIPS.length)];
+            updateVideoList(currentMuscleId, currentEquipmentId);
+            updateSelects(currentMuscleId, currentEquipmentId);
+        }
+
+        function updateVideoList(mId, eId) {
+            const key = `${mId}-${eId}`;
+            const localVideos = USER_CONFIG.videos[key] || [];
+            const mName = USER_CONFIG.muscles.find(x => x.id === mId)?.name || '';
+            const eName = USER_CONFIG.equipment.find(x => x.id === eId)?.name || '';
+            
+            const localContainer = document.getElementById('video-list-local');
+            if (localContainer) {
+                if (localVideos.length === 0) {
+                    localContainer.innerHTML = `<div class="empty-state">暂无专属库视频，请前往“我的配置”添加。</div>`;
+                } else {
+                    localContainer.innerHTML = localVideos.map(v => `
+                        <div class="video-card" onclick="window.open('${v.url}', '_blank')">
+                            <div class="video-thumb">▶</div>
+                            <div class="video-info">
+                                <div class="video-title">${v.title}</div>
+                                <div class="video-meta">我的专属库</div>
+                            </div>
+                        </div>
+                    `).join('');
+                }
+            }
+
+            const exploreContainer = document.getElementById('video-list-explore');
+            if (exploreContainer) {
+                const exploreUrl = `https://search.bilibili.com/all?keyword=${encodeURIComponent(mName + ' ' + eName + ' 训练')}`;
+                exploreContainer.innerHTML = `
+                    <div class="video-card" style="background: rgba(118, 75, 162, 0.05); border: 1px dashed rgba(118, 75, 162, 0.3);" onclick="window.open('${exploreUrl}', '_blank')">
+                        <div class="video-thumb" style="background: #e6e6e6; color: #764ba2;">🔍</div>
+                        <div class="video-info">
+                            <div class="video-title">去 B 站搜索探索更多教程</div>
+                            <div class="video-meta">关键词: ${mName} + ${eName}</div>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        function updateSelects(mId, eId) {
+            const mSelect = document.getElementById('actual-muscle');
+            if (mSelect) {
+                mSelect.innerHTML = USER_CONFIG.muscles.map(m => `<option value="${m.id}" ${m.id === mId ? 'selected' : ''}>${m.emoji} ${m.name}</option>`).join('');
+                updateEquipmentOptions(mId, eId);
+                mSelect.onchange = function() { updateEquipmentOptions(this.value); };
+            }
+        }
+
+        function updateEquipmentOptions(mId, selectedId) {
+            const compatible = USER_CONFIG.relations[mId] || [];
+            const eSelect = document.getElementById('actual-equipment');
+            if (eSelect) {
+                eSelect.innerHTML = USER_CONFIG.equipment.filter(e => compatible.includes(e.id))
+                    .map(e => `<option value="${e.id}" ${e.id === selectedId ? 'selected' : ''}>${e.emoji} ${e.name}</option>`).join('');
+            }
+        }
+
+        function checkIn() {
+            const mId = document.getElementById('actual-muscle').value;
+            const eId = document.getElementById('actual-equipment').value;
+            const durationInput = document.getElementById('actual-duration');
+            const notesInput = document.getElementById('actual-notes');
+            
+            const duration = parseInt(durationInput.value) || 30;
+            const notes = notesInput.value;
+            const m = USER_CONFIG.muscles.find(x => x.id === mId);
+            const e = USER_CONFIG.equipment.find(x => x.id === eId);
+            const record = {
+                timestamp: Date.now(),
+                date: new Date().toLocaleDateString('zh-CN'),
+                muscle: mId, muscleName: m.name, muscleEmoji: m.emoji,
+                equipment: eId, equipmentName: e.name, equipmentEmoji: e.emoji,
+                duration, notes
+            };
+            history.unshift(record);
+            localStorage.setItem('workoutHistory', JSON.stringify(history));
+            alert('✅ 打卡成功！');
+            durationInput.value = '';
+            notesInput.value = '';
+            updateHistory();
+            updateStats();
+        }
+
+        function updateHistory() {
+            const container = document.getElementById('history-list');
+            if (!container) return;
+            const startVal = document.getElementById('filter-start').value;
+            const endVal = document.getElementById('filter-end').value;
+            let filtered = history.map((h, i) => ({...h, originalIndex: i}));
+            if (startVal) filtered = filtered.filter(h => h.timestamp >= new Date(startVal).setHours(0,0,0,0));
+            if (endVal) filtered = filtered.filter(h => h.timestamp <= new Date(endVal).setHours(23,59,59,999));
+            if (filtered.length === 0) { container.innerHTML = '<div class="empty-state">暂无记录</div>'; return; }
+            container.innerHTML = filtered.map(h => `
+                <div class="history-item">
+                    <div class="history-item-content">
+                        <div><span class="tag">${h.muscleEmoji} ${h.muscleName}</span><span class="tag tag-equipment">${h.equipmentEmoji} ${h.equipmentName}</span><span style="color:#666;font-size:13px;">${h.duration}分钟</span></div>
+                        ${h.notes ? `<div class="history-notes">📝 ${h.notes}</div>` : ''}
+                    </div>
+                    <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;">
+                        <span style="color:#999;font-size:11px;">${h.date}</span>
+                        <div class="history-actions">
+                            <button class="btn btn-small btn-secondary" onclick="openEditModal(${h.originalIndex})">编辑</button>
+                            <button class="btn btn-small btn-danger" onclick="deleteRecord(${h.originalIndex})">删除</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function openEditModal(index) {
+            editingIndex = index;
+            const r = history[index];
+            document.getElementById('edit-muscle').innerHTML = USER_CONFIG.muscles.map(m => `<option value="${m.id}" ${m.id === r.muscle ? 'selected' : ''}>${m.emoji} ${m.name}</option>`).join('');
+            const compatible = USER_CONFIG.relations[r.muscle] || [];
+            document.getElementById('edit-equipment').innerHTML = USER_CONFIG.equipment.filter(e => compatible.includes(e.id))
+                .map(e => `<option value="${e.id}" ${e.id === r.equipment ? 'selected' : ''}>${e.emoji} ${e.name}</option>`).join('');
+            document.getElementById('edit-duration').value = r.duration;
+            document.getElementById('edit-notes').value = r.notes || '';
+            document.getElementById('edit-modal').classList.add('show');
+        }
+
+        function saveEdit() {
+            if (editingIndex < 0) return;
+            const mId = document.getElementById('edit-muscle').value;
+            const eId = document.getElementById('edit-equipment').value;
+            const m = USER_CONFIG.muscles.find(x => x.id === mId);
+            const e = USER_CONFIG.equipment.find(x => x.id === eId);
+            history[editingIndex] = {
+                ...history[editingIndex],
+                muscle: mId, muscleName: m.name, muscleEmoji: m.emoji,
+                equipment: eId, equipmentName: e.name, equipmentEmoji: e.emoji,
+                duration: parseInt(document.getElementById('edit-duration').value),
+                notes: document.getElementById('edit-notes').value
+            };
+            localStorage.setItem('workoutHistory', JSON.stringify(history));
+            closeEditModal();
+            updateHistory();
+            updateStats();
+        }
+
+        function updateStats() {
+            const now = new Date();
+            const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
+            const h3d = history.filter(h => h.timestamp >= startOfToday - 2*86400000);
+            const h7d = history.filter(h => h.timestamp >= startOfToday - 6*86400000);
+
+            const s3s = document.getElementById('stat-3d-sessions');
+            if (s3s) s3s.textContent = h3d.length;
+            const s3d = document.getElementById('stat-3d-duration');
+            if (s3d) s3d.textContent = h3d.reduce((s, h) => s + h.duration, 0);
+            const s7s = document.getElementById('stat-7d-sessions');
+            if (s7s) s7s.textContent = h7d.length;
+            const s7d = document.getElementById('stat-7d-duration');
+            if (s7d) s7d.textContent = h7d.reduce((s, h) => s + h.duration, 0);
+
+            const m3d = document.getElementById('muscle-distribution-3d');
+            const m7d = document.getElementById('muscle-distribution-7d');
+            const e3d = document.getElementById('equipment-distribution-3d');
+            const e7d = document.getElementById('equipment-distribution-7d');
+
+            function buildDist(data, type) {
+                const counts = {};
+                data.forEach(h => {
+                    const key = type === 'muscle' ? h.muscleName : h.equipmentName;
+                    counts[key] = (counts[key] || 0) + (type === 'muscle' ? h.duration : 1);
+                });
+                const sorted = Object.entries(counts).sort((a,b) => b[1] - a[1]);
+                const max = sorted[0]?.[1] || 1;
+                if (sorted.length === 0) return '<div class="empty-state">无数据</div>';
+                return sorted.map(([n, c]) => `
+                    <div class="progress-bar">
+                        <div class="progress-label"><span>${n}</span><span>${type==='muscle'?c+'分':c+'次'}</span></div>
+                        <div class="progress-track"><div class="progress-fill" style="width:${c/max*100}%"></div></div>
+                    </div>
+                `).join('');
+            }
+            if (m3d) m3d.innerHTML = buildDist(h3d, 'muscle');
+            if (m7d) m7d.innerHTML = buildDist(h7d, 'muscle');
+            if (e3d) e3d.innerHTML = buildDist(h3d, 'equip');
+            if (e7d) e7d.innerHTML = buildDist(h7d, 'equip');
+        }
+
+        function switchTab(tab) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+            document.getElementById(`${tab}-section`).classList.add('active');
+        }
+
+        // --- Common Helpers ---
+        function closeEditModal() { document.getElementById('edit-modal').classList.remove('show'); editingIndex = -1; }
+        function deleteRecord(i) { if(confirm('删除？')){ history.splice(i,1); localStorage.setItem('workoutHistory', JSON.stringify(history)); updateHistory(); updateStats(); } }
+        function clearFilters() { document.getElementById('filter-start').value=''; document.getElementById('filter-end').value=''; updateHistory(); }
+
+        const TIPS = [ "力量训练前建议进行5-10分钟动态拉伸。", "离心阶段缓慢放下重量对肌肉生长刺激极大。", "保持水分充足能提高运动表现。" ];
+
+        // Initial Run
+        refreshAllUI();
+    </script>
+</body>
+
+</html>
