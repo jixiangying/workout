@@ -12,8 +12,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #764ba2;
-            --secondary: #667eea;
+            --primary: #079992;
+            --secondary: #38ada9;
             --bg: #f5f7fa;
             --card-bg: rgba(255, 255, 255, 0.85);
             --text: #2d3436;
@@ -27,7 +27,7 @@
         }
 
         body {
-            background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%);
+            background: linear-gradient(135deg, #60a3bc 0%, #b8e994 100%);
             min-height: 100vh;
             padding: 16px;
         }
@@ -66,7 +66,7 @@
         .tab.active {
             background: rgba(255, 255, 255, 0.85);
             backdrop-filter: blur(10px);
-            color: #764ba2;
+            color: #079992;
         }
 
         .section {
@@ -117,7 +117,7 @@
         .recommend-draw-area {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            border-right: 1px solid rgba(118, 75, 162, 0.1);
+            border-right: 1px solid rgba(7, 153, 146, 0.1);
         }
 
         .recommend-slot {
@@ -130,7 +130,7 @@
         }
 
         .recommend-slot:first-child {
-            border-right: 1px dashed rgba(118, 75, 162, 0.1);
+            border-right: 1px dashed rgba(7, 153, 146, 0.1);
         }
 
         .recommend-tips-area {
@@ -138,14 +138,14 @@
             flex-direction: column;
             justify-content: center;
             padding: 30px;
-            background: rgba(118, 75, 162, 0.02);
+            background: rgba(7, 153, 146, 0.02);
         }
 
         .slot-label {
             font-size: 11px;
             text-transform: uppercase;
             letter-spacing: 1.5px;
-            color: #a29bfe;
+            color: #38ada9;
             font-weight: 700;
             margin-bottom: 15px;
         }
@@ -213,7 +213,7 @@
         .btn {
             transition: all 0.2s ease;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%);
+            background: linear-gradient(135deg, #079992 0%, #38ada9 100%);
             color: white;
             border: none;
             padding: 12px 20px;
@@ -284,7 +284,7 @@
         .video-thumb {
             width: 50px;
             height: 50px;
-            background: linear-gradient(135deg, #a18cd1, #fbc2eb);
+            background: linear-gradient(135deg, #079992, #38ada9);
             border-radius: 8px;
             display: flex;
             align-items: center;
@@ -293,19 +293,23 @@
             font-size: 18px;
             margin-right: 10px;
         }
-
-        .video-info {
-            flex: 1;
-            min-width: 0;
+        ...
+        .tag-equipment {
+            background: #38ada9;
+            color: white;
         }
+
 
         .video-title {
             font-size: 13px;
             font-weight: 500;
             color: #333;
-            white-space: nowrap;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
             overflow: hidden;
             text-overflow: ellipsis;
+            line-height: 1.4;
         }
 
         .video-meta {
@@ -341,7 +345,7 @@
         .stat-num {
             font-size: 32px;
             font-weight: bold;
-            color: #764ba2;
+            color: #079992;
         }
 
         .stat-label {
@@ -415,7 +419,7 @@
         }
 
         .progress-fill {
-            background: linear-gradient(135deg, #a18cd1, #fbc2eb);
+            background: linear-gradient(135deg, #079992, #38ada9);
             border-radius: 4px;
             height: 100%;
         }
@@ -485,7 +489,7 @@
         .stats-section-header {
             font-size: 16px;
             font-weight: bold;
-            color: #764ba2;
+            color: #079992;
             margin-bottom: 12px;
             display: flex;
             align-items: center;
@@ -512,7 +516,7 @@
             align-items: center;
             margin-bottom: 12px;
             padding-bottom: 12px;
-            border-bottom: 1px dashed rgba(118, 75, 162, 0.2);
+            border-bottom: 1px dashed rgba(7, 153, 146, 0.2);
         }
 
         .mini-stat-row:last-child {
@@ -530,7 +534,7 @@
         .mini-stat-value {
             font-size: 20px;
             font-weight: bold;
-            color: #764ba2;
+            color: #079992;
         }
 
         .history-item-content { flex: 1; }
@@ -555,7 +559,7 @@
             gap: 12px;
             margin-bottom: 16px;
             padding-bottom: 12px;
-            border-bottom: 1px dashed rgba(118, 75, 162, 0.2);
+            border-bottom: 1px dashed rgba(7, 153, 146, 0.2);
             flex-wrap: wrap;
         }
 
@@ -577,14 +581,14 @@
             border-radius: 8px;
             font-size: 13px;
             background: rgba(255, 255, 255, 0.5);
-            color: #764ba2;
+            color: #079992;
             outline: none;
         }
 
         .btn-link {
             background: none;
             border: none;
-            color: #764ba2;
+            color: #079992;
             font-size: 13px;
             cursor: pointer;
             text-decoration: underline;
@@ -612,7 +616,7 @@
         }
 
         #history-list::-webkit-scrollbar-thumb {
-            background: linear-gradient(135deg, #a18cd1, #fbc2eb);
+            background: linear-gradient(135deg, #079992, #38ada9);
             border-radius: 10px;
         }
         .config-item {
@@ -638,6 +642,19 @@
             cursor: pointer;
         }
         .checkbox-item input { width: auto; margin: 0; }
+        .config-video-title {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            line-height: 1.4;
+            color: var(--primary);
+            text-decoration: underline;
+            cursor: pointer;
+            flex: 1;
+            margin-right: 10px;
+        }
     </style>
 </head>
 
@@ -932,7 +949,6 @@
 
         const DEFAULT_CONFIG = {
             muscles: [
-                { id: 'm1', name: '胸肌', emoji: '👗' },
                 { id: 'm2', name: '肩背', emoji: '🚣‍♂️' },
                 { id: 'm3', name: '手臂', emoji: '💪' },
                 { id: 'm4', name: '臀腿', emoji: '🦵' },
@@ -945,7 +961,6 @@
                 { id: 'e3', name: '弹力带', emoji: '🎗️' }
             ],
             relations: {
-                'm1': ['e1', 'e2', 'e3'],
                 'm2': ['e1', 'e2', 'e3'],
                 'm3': ['e1', 'e2', 'e3'],
                 'm4': ['e1', 'e2', 'e3'],
@@ -1074,10 +1089,16 @@
             if (!mSelect || !eSelect) return;
             
             const mId = mSelect.value;
+            const currentEquipVal = eSelect.value;
             const compatible = USER_CONFIG.relations[mId] || [];
+            
             eSelect.innerHTML = USER_CONFIG.equipment
                 .filter(e => compatible.includes(e.id))
                 .map(e => `<option value="${e.id}">${e.emoji} ${e.name}</option>`).join('');
+            
+            if (currentEquipVal && compatible.includes(currentEquipVal)) {
+                eSelect.value = currentEquipVal;
+            }
         }
 
         function renderEquipCheckboxes() {
@@ -1123,7 +1144,7 @@
             const vids = USER_CONFIG.videos[key] || [];
             container.innerHTML = vids.map((v, i) => `
                 <div class="config-item">
-                    <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${v.title}</span>
+                    <span class="config-video-title" onclick="window.open('${v.url}', '_blank')">${v.title}</span>
                     <button class="btn btn-danger btn-small" onclick="deleteVideo('${key}', ${i})">删除</button>
                 </div>
             `).join('') || '<div class="empty-state">暂无视频</div>';
@@ -1156,12 +1177,12 @@
             } else {
                 newVid.title = '自定义视频 ' + USER_CONFIG.videos[key].length;
             }
-            saveConfig();
+            saveConfig(false);
         }
 
         function deleteVideo(key, index) {
             USER_CONFIG.videos[key].splice(index, 1);
-            saveConfig();
+            saveConfig(false);
         }
 
         function exportConfig() {
@@ -1274,8 +1295,8 @@
             if (exploreContainer) {
                 const exploreUrl = `https://search.bilibili.com/all?keyword=${encodeURIComponent(mName + ' ' + eName + ' 训练')}`;
                 exploreContainer.innerHTML = `
-                    <div class="video-card" style="background: rgba(118, 75, 162, 0.05); border: 1px dashed rgba(118, 75, 162, 0.3);" onclick="window.open('${exploreUrl}', '_blank')">
-                        <div class="video-thumb" style="background: #e6e6e6; color: #764ba2;">🔍</div>
+                    <div class="video-card" style="background: rgba(7, 153, 146, 0.05); border: 1px dashed rgba(7, 153, 146, 0.3);" onclick="window.open('${exploreUrl}', '_blank')">
+                        <div class="video-thumb" style="background: #e6e6e6; color: #079992;">🔍</div>
                         <div class="video-info">
                             <div class="video-title">去 B 站搜索探索更多教程</div>
                             <div class="video-meta">关键词: ${mName} + ${eName}</div>
