@@ -564,7 +564,7 @@
             font-weight: 500;
         }
 
-        .filter-group input[type="date"] {
+        .filter-group input {
             padding: 6px 10px;
             border: 1px solid #ddd;
             border-radius: 8px;
@@ -805,6 +805,10 @@
             <div class="card">
                 <div class="card-title">📅 训练记录</div>
                 <div class="filter-bar">
+                    <div class="filter-group">
+                        <label>搜索</label>
+                        <input type="text" id="filter-search" placeholder="部位/器械/备注" oninput="updateHistory()">
+                    </div>
                     <div class="filter-group">
                         <label>从</label>
                         <input type="date" id="filter-start" onchange="updateHistory()">
@@ -1339,9 +1343,18 @@
         function updateHistory() {
             const container = document.getElementById('history-list');
             if (!container) return;
+            const searchVal = document.getElementById('filter-search').value.toLowerCase();
             const startVal = document.getElementById('filter-start').value;
             const endVal = document.getElementById('filter-end').value;
             let filtered = history.map((h, i) => ({...h, originalIndex: i}));
+            
+            if (searchVal) {
+                filtered = filtered.filter(h => 
+                    h.muscleName.toLowerCase().includes(searchVal) || 
+                    h.equipmentName.toLowerCase().includes(searchVal) || 
+                    (h.notes && h.notes.toLowerCase().includes(searchVal))
+                );
+            }
             if (startVal) filtered = filtered.filter(h => h.timestamp >= new Date(startVal).setHours(0,0,0,0));
             if (endVal) filtered = filtered.filter(h => h.timestamp <= new Date(endVal).setHours(23,59,59,999));
             if (filtered.length === 0) { container.innerHTML = '<div class="empty-state">暂无记录</div>'; return; }
@@ -1491,7 +1504,7 @@
 
         function closeEditModal() { document.getElementById('edit-modal').classList.remove('show'); editingIndex = -1; }
         function deleteRecord(i) { if(confirm('删除？')){ history.splice(i,1); localStorage.setItem('workoutHistory', JSON.stringify(history)); updateHistory(); updateStats(); } }
-        function clearFilters() { document.getElementById('filter-start').value=''; document.getElementById('filter-end').value=''; updateHistory(); }
+        function clearFilters() { document.getElementById('filter-search').value=''; document.getElementById('filter-start').value=''; document.getElementById('filter-end').value=''; updateHistory(); }
 
         const TIPS = [ "力量训练前建议进行5-10分钟动态拉伸。", "离心阶段缓慢放下重量对肌肉生长刺激极大。", "保持水分充足能提高运动表现。" ];
 
