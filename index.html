@@ -89,6 +89,8 @@
             border-radius: 16px;
             padding: 20px;
             box-shadow: 0 8px 32px rgba(31, 38, 135, 0.1);
+            display: flex;
+            flex-direction: column;
         }
 
         .card-full {
@@ -103,6 +105,26 @@
             display: flex;
             align-items: center;
             gap: 6px;
+        }
+
+        .scroll-area {
+            flex: 1;
+            overflow-y: auto;
+            padding-right: 4px;
+        }
+
+        .scroll-area::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .scroll-area::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.05);
+            border-radius: 10px;
+        }
+
+        .scroll-area::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #079992, #38ada9);
+            border-radius: 10px;
         }
 
         .recommendation-card {
@@ -590,8 +612,6 @@
         }
 
         #history-list {
-            max-height: 500px;
-            overflow-y: auto;
             padding-right: 8px;
         }
 
@@ -704,7 +724,7 @@
                             <button class="btn btn-small" onclick="addVideo()" style="width: auto;">添加</button>
                         </div>
                     </div>
-                    <div id="config-video-list" style="max-height: 200px; overflow-y: auto;"></div>
+                    <div id="config-video-list" class="scroll-area"></div>
                 </div>
 
                 <div class="card card-full">
@@ -779,23 +799,24 @@
                     <button class="btn" onclick="checkIn()">完成打卡</button>
                 </div>
 
-                <!-- 视频卡片 -->
                 <div class="card">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
                         <div class="card-title" style="margin-bottom: 0;">📺 跟练视频</div>
                     </div>
                     
-                    <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 8px;">
-                        <div style="font-weight: 600; font-size: 14px; color: #666;">🎬 我的专属库</div>
-                        <div style="display: flex; align-items: center; gap: 8px;">
-                            <div id="video-db-status" style="font-size: 12px; color: #999;"></div>
-                            <span id="sync-status" style="font-size: 11px; color: #4caf50; display: none;">✅ 已同步</span>
+                    <div class="scroll-area">
+                        <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 8px;">
+                            <div style="font-weight: 600; font-size: 14px; color: #666;">🎬 我的专属库</div>
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <div id="video-db-status" style="font-size: 12px; color: #999;"></div>
+                                <span id="sync-status" style="font-size: 11px; color: #4caf50; display: none;">✅ 已同步</span>
+                            </div>
                         </div>
+                        <div id="video-list-local" style="margin-bottom: 20px;"></div>
+                        
+                        <div style="font-weight: 600; font-size: 14px; color: #666; margin-bottom: 8px;">🔍 探索更多</div>
+                        <div id="video-list-explore"></div>
                     </div>
-                    <div id="video-list-local" style="margin-bottom: 20px;"></div>
-                    
-                    <div style="font-weight: 600; font-size: 14px; color: #666; margin-bottom: 8px;">🔍 探索更多</div>
-                    <div id="video-list-explore"></div>
                 </div>
             </div>
         </div>
@@ -819,7 +840,7 @@
                     </div>
                     <button class="btn-link" onclick="clearFilters()">清除筛选</button>
                 </div>
-                <div id="history-list"></div>
+                <div id="history-list" class="scroll-area"></div>
             </div>
 
             <div class="card card-full">
