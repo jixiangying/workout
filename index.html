@@ -682,7 +682,7 @@
         <div id="config-section" class="section active">
             <div class="grid">
                 <!-- 部位与器械管理 -->
-                <div class="card">
+                <div class="card" id="config-master">
                     <div class="card-title">🏗️ 基础配置</div>
                     <div class="form-group">
                         <label>训练部位</label>
@@ -706,7 +706,7 @@
                 </div>
 
                 <!-- 联动与视频管理 -->
-                <div class="card">
+                <div class="card" id="config-slave">
                     <div class="card-title">🔗 联动与视频库</div>
                     <div class="form-group">
                         <label>选择部位配置器械</label>
@@ -778,7 +778,7 @@
                 </div>
 
                 <!-- 打卡卡片 -->
-                <div class="card">
+                <div class="card" id="recommend-master">
                     <div class="card-title">✅ 打卡</div>
                     <div class="form-group">
                         <label>部位</label>
@@ -799,7 +799,7 @@
                     <button class="btn" onclick="checkIn()">完成打卡</button>
                 </div>
 
-                <div class="card">
+                <div class="card" id="recommend-slave">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
                         <div class="card-title" style="margin-bottom: 0;">📺 跟练视频</div>
                     </div>
@@ -1529,8 +1529,39 @@
 
         const TIPS = [ "力量训练前建议进行5-10分钟动态拉伸。", "离心阶段缓慢放下重量对肌肉生长刺激极大。", "保持水分充足能提高运动表现。" ];
 
+        // --- 自动同步高度逻辑 ---
+        function initHeightSync() {
+            const syncPairs = [
+                { master: 'config-master', slave: 'config-slave' },
+                { master: 'recommend-master', slave: 'recommend-slave' }
+            ];
+
+            syncPairs.forEach(pair => {
+                const masterEl = document.getElementById(pair.master);
+                const slaveEl = document.getElementById(pair.slave);
+                if (!masterEl || !slaveEl) return;
+
+                const observer = new ResizeObserver(entries => {
+                    for (let entry of entries) {
+                        // 只有在非堆叠状态（即并排显示）时才同步高度
+                        // 检查父容器 grid 的列数，如果是 2 列则同步
+                        const grid = masterEl.parentElement;
+                        const isTwoColumn = window.getComputedStyle(grid).gridTemplateColumns.split(' ').length === 2;
+                        
+                        if (isTwoColumn) {
+                            slaveEl.style.maxHeight = entry.target.offsetHeight + 'px';
+                        } else {
+                            slaveEl.style.maxHeight = 'none';
+                        }
+                    }
+                });
+                observer.observe(masterEl);
+            });
+        }
+
         // Initial Run
         refreshAllUI();
+        initHeightSync();
     </script>
 </body>
 
