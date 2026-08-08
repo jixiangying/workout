@@ -548,6 +548,454 @@
             color: #079992;
         }
 
+        .activity-card {
+            --activity-cell-size: 14px;
+        }
+
+        .activity-card-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .activity-card-header .stats-section-header {
+            margin-bottom: 3px;
+        }
+
+        .activity-subtitle {
+            font-size: 12px;
+            color: #777;
+        }
+
+        .activity-summary {
+            flex: none;
+            padding: 5px 10px;
+            border-radius: 999px;
+            background: rgba(7, 153, 146, 0.1);
+            color: var(--primary);
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .activity-scroll {
+            overflow-x: auto;
+            padding: 2px 2px 8px;
+            scrollbar-color: rgba(7, 153, 146, 0.55) rgba(0, 0, 0, 0.04);
+            scrollbar-width: thin;
+        }
+
+        .activity-scroll::-webkit-scrollbar { height: 6px; }
+        .activity-scroll::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.04);
+            border-radius: 999px;
+        }
+        .activity-scroll::-webkit-scrollbar-thumb {
+            background: rgba(7, 153, 146, 0.55);
+            border-radius: 999px;
+        }
+
+        .activity-calendar {
+            min-width: 780px;
+            width: max-content;
+        }
+
+        .activity-months {
+            display: grid;
+            grid-template-columns: repeat(var(--week-count), var(--activity-cell-size));
+            gap: 3px;
+            height: 18px;
+            margin-left: 31px;
+            color: #777;
+            font-size: 10px;
+            line-height: 1;
+        }
+
+        .activity-month-label {
+            white-space: nowrap;
+        }
+
+        .activity-body {
+            display: flex;
+            gap: 8px;
+        }
+
+        .activity-weekdays {
+            display: grid;
+            position: sticky;
+            left: 0;
+            z-index: 3;
+            flex: 0 0 23px;
+            grid-template-rows: repeat(7, var(--activity-cell-size));
+            gap: 3px;
+            padding-right: 3px;
+            background: rgba(247, 251, 250, 0.94);
+            color: #888;
+            font-size: 9px;
+            line-height: var(--activity-cell-size);
+            text-align: right;
+        }
+
+        .activity-weeks {
+            display: grid;
+            grid-auto-flow: column;
+            grid-template-rows: repeat(7, var(--activity-cell-size));
+            grid-auto-columns: var(--activity-cell-size);
+            gap: 3px;
+        }
+
+        .activity-cell,
+        .activity-legend-cell {
+            width: var(--activity-cell-size);
+            height: var(--activity-cell-size);
+            border-radius: 2.5px;
+            background: rgba(7, 153, 146, 0.09);
+            box-shadow: inset 0 0 0 1px rgba(7, 153, 146, 0.05);
+        }
+
+        .activity-cell {
+            transition: transform 0.16s ease, box-shadow 0.16s ease;
+        }
+
+        .activity-cell:hover {
+            position: relative;
+            z-index: 2;
+            transform: scale(1.35);
+            box-shadow: 0 2px 7px rgba(7, 153, 146, 0.28);
+        }
+
+        .activity-level-1 { background: #bde7d5; }
+        .activity-level-2 { background: #71c9a6; }
+        .activity-level-3 { background: #2eaa83; }
+        .activity-level-4 { background: #087f72; }
+
+        .activity-cell-outside {
+            visibility: hidden;
+        }
+
+        .activity-footer {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            flex-wrap: wrap;
+            gap: 7px 14px;
+            margin-top: 8px;
+            color: #777;
+            font-size: 10px;
+        }
+
+        .activity-legend-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            white-space: nowrap;
+        }
+
+        .activity-tooltip {
+            position: fixed;
+            z-index: 3000;
+            max-width: min(280px, calc(100vw - 16px));
+            padding: 7px 10px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 8px;
+            background: rgba(37, 51, 50, 0.96);
+            box-shadow: 0 6px 18px rgba(24, 55, 52, 0.2);
+            color: white;
+            font-size: 12px;
+            line-height: 1.4;
+            white-space: nowrap;
+            pointer-events: none;
+            opacity: 0;
+            transform: translateY(4px);
+            transition: opacity 0.12s ease, transform 0.12s ease;
+        }
+
+        .activity-tooltip.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        @media (max-width: 640px) {
+            .activity-card {
+                --activity-cell-size: 11px;
+            }
+
+            .activity-card-header {
+                align-items: stretch;
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            .activity-summary {
+                align-self: flex-start;
+            }
+
+            .activity-months {
+                margin-left: 0;
+            }
+
+            .activity-body {
+                gap: 0;
+            }
+
+            .activity-weekdays {
+                display: none;
+            }
+        }
+
+        .cumulative-workout-card {
+            position: relative;
+            isolation: isolate;
+            min-height: 132px;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            text-align: center;
+            color: white;
+            background: linear-gradient(120deg, rgba(7, 153, 146, 0.96), rgba(56, 173, 169, 0.9));
+            border: 1px solid rgba(255, 255, 255, 0.45);
+            box-shadow: 0 12px 32px rgba(7, 153, 146, 0.22);
+        }
+
+        .cumulative-workout-card::before {
+            content: '';
+            position: absolute;
+            inset: -80% -30%;
+            z-index: -1;
+            background: linear-gradient(105deg, transparent 42%, rgba(255, 255, 255, 0.25) 50%, transparent 58%);
+            transform: translateX(-55%) rotate(8deg);
+        }
+
+        .cumulative-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .cumulative-heading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-size: clamp(20px, 3vw, 26px);
+            font-weight: 700;
+            letter-spacing: 0.02em;
+            text-shadow: 0 2px 8px rgba(0, 80, 76, 0.18);
+        }
+
+        .cumulative-icon {
+            display: inline-block;
+            font-size: 32px;
+            transform-origin: 50% 100%;
+        }
+
+        .cumulative-value {
+            display: inline-block;
+            min-width: 1.4em;
+            color: #fff6a8;
+            font-size: clamp(34px, 5vw, 46px);
+            font-weight: 800;
+            line-height: 1;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .cumulative-message {
+            margin-top: 9px;
+            font-size: 13px;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.88);
+            letter-spacing: 0.04em;
+        }
+
+        .celebration-spark {
+            --x: 0px;
+            --delay: 0s;
+            position: absolute;
+            left: 50%;
+            bottom: 22%;
+            width: 7px;
+            height: 12px;
+            border-radius: 3px;
+            opacity: 0;
+            background: #fff6a8;
+            transform: translateX(var(--x));
+        }
+
+        .celebration-spark:nth-of-type(2n) { background: #ffcf70; }
+        .celebration-spark:nth-of-type(3n) { background: #d5fff3; }
+
+        .celebration-popper {
+            --popper-transform: rotate(-16deg);
+            position: absolute;
+            z-index: 2;
+            bottom: 9px;
+            left: 18px;
+            font-size: 30px;
+            line-height: 1;
+            opacity: 0;
+            transform: var(--popper-transform) scale(0.45);
+            transform-origin: 50% 100%;
+            filter: drop-shadow(0 3px 5px rgba(0, 70, 66, 0.18));
+        }
+
+        .celebration-popper-right {
+            right: 18px;
+            left: auto;
+            --popper-transform: scaleX(-1) rotate(-16deg);
+        }
+
+        .ribbon-streamers {
+            position: absolute;
+            z-index: 1;
+            bottom: 27px;
+            left: 42px;
+            width: 170px;
+            height: 86px;
+            overflow: visible;
+            opacity: 0;
+            pointer-events: none;
+            filter: drop-shadow(0 2px 2px rgba(0, 70, 66, 0.14));
+        }
+
+        .ribbon-streamers-right {
+            right: 42px;
+            left: auto;
+            transform: scaleX(-1);
+        }
+
+        .ribbon-streamer {
+            fill: none;
+            stroke-linecap: round;
+            stroke-width: 5;
+            stroke-dasharray: 1;
+            stroke-dashoffset: 1;
+        }
+
+        .ribbon-confetti {
+            opacity: 0;
+            transform-box: fill-box;
+            transform-origin: center;
+        }
+
+        #stats-section.active .cumulative-workout-card::before {
+            animation: cumulative-shimmer 1.6s ease-out both;
+        }
+
+        #stats-section.active .cumulative-icon {
+            animation: trophy-celebrate 900ms cubic-bezier(.2, .8, .25, 1.25) both;
+        }
+
+        #stats-section.active .cumulative-value {
+            animation: number-glow 900ms ease-out both;
+        }
+
+        #stats-section.active .celebration-spark {
+            animation: confetti-pop 1.15s var(--delay) cubic-bezier(.2, .7, .3, 1) both;
+        }
+
+        #stats-section.active .celebration-popper {
+            animation: popper-burst 1.45s cubic-bezier(.2, .8, .25, 1.2) both;
+        }
+
+        #stats-section.active .celebration-popper-right {
+            animation-delay: .08s;
+        }
+
+        #stats-section.active .ribbon-streamers {
+            animation: streamers-visible 1.8s .12s ease-out both;
+        }
+
+        #stats-section.active .ribbon-streamers-right {
+            animation-delay: .2s;
+        }
+
+        #stats-section.active .ribbon-streamer {
+            animation: streamer-unfurl 1.35s .15s cubic-bezier(.2, .7, .25, 1) both;
+        }
+
+        #stats-section.active .ribbon-confetti {
+            animation: ribbon-confetti-fall 1.45s .25s ease-out both;
+        }
+
+        @keyframes cumulative-shimmer {
+            from { transform: translateX(-55%) rotate(8deg); }
+            to { transform: translateX(55%) rotate(8deg); }
+        }
+
+        @keyframes trophy-celebrate {
+            0% { transform: scale(0.5) rotate(-18deg); opacity: 0; }
+            55% { transform: scale(1.25) rotate(10deg); opacity: 1; }
+            75% { transform: scale(0.94) rotate(-5deg); }
+            100% { transform: scale(1) rotate(0); }
+        }
+
+        @keyframes number-glow {
+            0% { transform: translateY(8px) scale(0.9); opacity: 0; text-shadow: 0 0 0 rgba(255, 246, 168, 0); }
+            65% { transform: translateY(0) scale(1.08); opacity: 1; text-shadow: 0 0 24px rgba(255, 246, 168, 0.8); }
+            100% { transform: scale(1); text-shadow: 0 0 10px rgba(255, 246, 168, 0.35); }
+        }
+
+        @keyframes confetti-pop {
+            0% { opacity: 0; transform: translate(var(--x), 8px) rotate(0deg) scale(0.5); }
+            20% { opacity: 1; }
+            100% { opacity: 0; transform: translate(var(--x), -88px) rotate(250deg) scale(1); }
+        }
+
+        @keyframes popper-burst {
+            0% { opacity: 0; transform: var(--popper-transform) scale(0.4); }
+            32% { opacity: 1; transform: var(--popper-transform) scale(1.2); }
+            62% { opacity: 1; transform: var(--popper-transform) scale(0.96); }
+            100% { opacity: 0; transform: var(--popper-transform) scale(1); }
+        }
+
+        @keyframes streamers-visible {
+            0% { opacity: 0; }
+            18% { opacity: 0.95; }
+            72% { opacity: 0.78; }
+            100% { opacity: 0; }
+        }
+
+        @keyframes streamer-unfurl {
+            from { stroke-dashoffset: 1; }
+            to { stroke-dashoffset: 0; }
+        }
+
+        @keyframes ribbon-confetti-fall {
+            0% { opacity: 0; transform: translateY(-10px) rotate(0deg) scale(0.6); }
+            24% { opacity: 1; }
+            100% { opacity: 0; transform: translateY(28px) rotate(190deg) scale(1); }
+        }
+
+        @media (max-width: 480px) {
+            .celebration-popper { left: 6px; bottom: 2px; font-size: 22px; }
+            .celebration-popper-right { right: 6px; left: auto; }
+            .ribbon-streamers { left: 18px; bottom: -2px; width: 75px; height: 42px; }
+            .ribbon-streamers-right { right: 18px; left: auto; }
+            .ribbon-streamer { stroke-width: 6; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            #stats-section.active .cumulative-workout-card::before,
+            #stats-section.active .cumulative-icon,
+            #stats-section.active .cumulative-value,
+            #stats-section.active .celebration-spark,
+            #stats-section.active .celebration-popper,
+            #stats-section.active .ribbon-streamers,
+            #stats-section.active .ribbon-streamer,
+            #stats-section.active .ribbon-confetti {
+                animation: none;
+            }
+
+            #stats-section.active .celebration-popper,
+            #stats-section.active .ribbon-streamers {
+                opacity: 0.5;
+            }
+
+            #stats-section.active .ribbon-streamer {
+                stroke-dashoffset: 0;
+            }
+        }
+
         .history-item-content { flex: 1; }
         .history-notes {
             font-size: 12px;
@@ -612,7 +1060,16 @@
         }
 
         #history-list {
-            padding-right: 8px;
+            flex: none;
+            height: clamp(520px, 72vh, 700px);
+            overflow-y: auto;
+            overscroll-behavior: contain;
+            scrollbar-gutter: stable;
+            padding: 0 14px;
+            background: rgba(255, 255, 255, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            border-radius: 12px;
+            box-shadow: inset 0 1px 3px rgba(7, 153, 146, 0.05);
         }
 
         #history-list::-webkit-scrollbar {
@@ -627,6 +1084,41 @@
         #history-list::-webkit-scrollbar-thumb {
             background: linear-gradient(135deg, #079992, #38ada9);
             border-radius: 10px;
+        }
+
+        #history-section.active {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr);
+            gap: 12px;
+        }
+
+        .history-records-card,
+        .history-data-card {
+            background: var(--card-bg);
+        }
+
+        .history-records-card .history-item {
+            border-bottom-color: rgba(7, 153, 146, 0.12);
+        }
+
+        .history-data-actions {
+            margin-top: 0;
+        }
+
+        @media (max-width: 640px) {
+            #history-list {
+                height: clamp(460px, 62vh, 600px);
+                padding-inline: 10px;
+            }
+
+            .history-data-actions {
+                gap: 8px;
+            }
+
+            .history-data-actions .btn {
+                padding-inline: 8px;
+                font-size: 12px;
+            }
         }
         .config-item {
             display: flex;
@@ -823,7 +1315,7 @@
 
         <!-- 历史页面 -->
         <div id="history-section" class="section">
-            <div class="card">
+            <div class="card history-records-card">
                 <div class="card-title">📅 训练记录</div>
                 <div class="filter-bar">
                     <div class="filter-group">
@@ -843,9 +1335,9 @@
                 <div id="history-list" class="scroll-area"></div>
             </div>
 
-            <div class="card card-full">
+            <div class="card card-full history-data-card">
                 <div class="card-title">💾 数据管理</div>
-                <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+                <div class="btn-group-equal history-data-actions">
                     <button class="btn" onclick="exportHistory()">⬇️ 导出打卡记录</button>
                     <button class="btn btn-secondary" onclick="document.getElementById('import-file').click()">⬆️ 导入打卡记录</button>
                     <input type="file" id="import-file" style="display: none" accept=".json" onchange="importHistory(event)">
@@ -856,6 +1348,58 @@
         <!-- 统计页面 -->
         <div id="stats-section" class="section">
             <div class="grid">
+
+                <div class="card card-full cumulative-workout-card" id="cumulative-workout-card" role="status" aria-live="polite">
+                    <div class="cumulative-content">
+                        <div class="cumulative-heading">
+                            <span class="cumulative-icon" aria-hidden="true">🏆</span>
+                            <span>累计已锻炼 <span class="cumulative-value" id="stat-total-duration">0</span> 分钟</span>
+                        </div>
+                        <div class="cumulative-message">每一分钟都算数，继续保持！</div>
+                    </div>
+                    <span class="celebration-popper" aria-hidden="true">🎉</span>
+                    <svg class="ribbon-streamers" viewBox="0 0 180 90" aria-hidden="true">
+                        <path class="ribbon-streamer" pathLength="1" stroke="#ffe27a" d="M7 78 C28 54 18 18 55 21 S77 66 108 45 S139 12 174 24" />
+                        <path class="ribbon-streamer" pathLength="1" stroke="#ff9f8f" d="M10 70 C34 82 43 44 67 51 S93 83 120 61 S148 43 172 65" />
+                        <path class="ribbon-streamer" pathLength="1" stroke="#c9fff0" d="M18 76 C27 49 48 68 59 40 S74 8 95 16" />
+                        <rect class="ribbon-confetti" x="72" y="9" width="6" height="12" rx="2" fill="#ffcf70" />
+                        <rect class="ribbon-confetti" x="124" y="28" width="7" height="11" rx="2" fill="#d5fff3" />
+                    </svg>
+                    <span class="celebration-popper celebration-popper-right" aria-hidden="true">🎉</span>
+                    <svg class="ribbon-streamers ribbon-streamers-right" viewBox="0 0 180 90" aria-hidden="true">
+                        <path class="ribbon-streamer" pathLength="1" stroke="#ffcf70" d="M7 78 C28 54 18 18 55 21 S77 66 108 45 S139 12 174 24" />
+                        <path class="ribbon-streamer" pathLength="1" stroke="#c9fff0" d="M10 70 C34 82 43 44 67 51 S93 83 120 61 S148 43 172 65" />
+                        <path class="ribbon-streamer" pathLength="1" stroke="#ffad9d" d="M18 76 C27 49 48 68 59 40 S74 8 95 16" />
+                        <rect class="ribbon-confetti" x="72" y="9" width="6" height="12" rx="2" fill="#d5fff3" />
+                        <rect class="ribbon-confetti" x="124" y="28" width="7" height="11" rx="2" fill="#ffcf70" />
+                    </svg>
+                    <i class="celebration-spark" style="--x: -210px; --delay: .05s" aria-hidden="true"></i>
+                    <i class="celebration-spark" style="--x: -145px; --delay: .18s" aria-hidden="true"></i>
+                    <i class="celebration-spark" style="--x: -80px; --delay: .1s" aria-hidden="true"></i>
+                    <i class="celebration-spark" style="--x: 75px; --delay: .16s" aria-hidden="true"></i>
+                    <i class="celebration-spark" style="--x: 140px; --delay: .03s" aria-hidden="true"></i>
+                    <i class="celebration-spark" style="--x: 205px; --delay: .22s" aria-hidden="true"></i>
+                </div>
+
+                <div class="card card-full activity-card">
+                    <div class="activity-card-header">
+                        <div>
+                            <div class="stats-section-header">🟩 每日训练活跃度</div>
+                        </div>
+                        <div class="activity-summary" id="activity-summary">过去一年训练 0 天</div>
+                    </div>
+                    <div class="activity-scroll">
+                        <div class="activity-calendar" id="activity-calendar" role="img" aria-label="过去一年暂无训练记录"></div>
+                    </div>
+                    <div class="activity-tooltip" id="activity-tooltip" role="tooltip"></div>
+                    <div class="activity-footer" aria-hidden="true">
+                        <span class="activity-legend-item"><i class="activity-legend-cell"></i>0 分钟</span>
+                        <span class="activity-legend-item"><i class="activity-legend-cell activity-level-1"></i>1–19 分钟</span>
+                        <span class="activity-legend-item"><i class="activity-legend-cell activity-level-2"></i>20–39 分钟</span>
+                        <span class="activity-legend-item"><i class="activity-legend-cell activity-level-3"></i>40–59 分钟</span>
+                        <span class="activity-legend-item"><i class="activity-legend-cell activity-level-4"></i>≥60 分钟</span>
+                    </div>
+                </div>
 
                 <div class="card card-full">
                     <div class="stats-section-header">📊 核心数据对比</div>
@@ -931,6 +1475,10 @@
         <div class="modal-content">
             <div class="modal-title">编辑记录</div>
             <div class="form-group">
+                <label for="edit-date">日期</label>
+                <input type="date" id="edit-date" required>
+            </div>
+            <div class="form-group">
                 <label>部位</label>
                 <select id="edit-muscle"></select>
             </div>
@@ -981,8 +1529,20 @@
             videos: {}
         };
 
+        const HISTORY_STORAGE_KEY = 'workoutHistory';
+
+        function getStoredHistory() {
+            try {
+                const stored = JSON.parse(localStorage.getItem(HISTORY_STORAGE_KEY) || '[]');
+                return Array.isArray(stored) ? stored : [];
+            } catch (error) {
+                console.warn('训练记录读取失败：storage 中的数据格式不正确。', error);
+                return [];
+            }
+        }
+
         let USER_CONFIG = JSON.parse(localStorage.getItem('workout_user_config')) || DEFAULT_CONFIG;
-        let history = JSON.parse(localStorage.getItem('workoutHistory') || '[]');
+        let history = getStoredHistory();
 
         function saveConfig(musclesChanged = true) {
             localStorage.setItem('workout_user_config', JSON.stringify(USER_CONFIG));
@@ -1353,7 +1913,7 @@
                 duration, notes
             };
             history.unshift(record);
-            localStorage.setItem('workoutHistory', JSON.stringify(history));
+            localStorage.setItem(HISTORY_STORAGE_KEY, JSON.stringify(history));
             alert('✅ 打卡成功！');
             durationInput.value = '';
             notesInput.value = '';
@@ -1399,9 +1959,21 @@
             `}).join('');
         }
 
+        function formatDateForInput(timestamp, fallbackDate) {
+            let date = new Date(Number(timestamp));
+            if (Number.isNaN(date.getTime()) && fallbackDate) {
+                const parts = String(fallbackDate).split(/\D+/).filter(Boolean).map(Number);
+                if (parts.length >= 3) date = new Date(parts[0], parts[1] - 1, parts[2]);
+            }
+            if (Number.isNaN(date.getTime())) return '';
+            const pad = value => String(value).padStart(2, '0');
+            return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
+        }
+
         function openEditModal(index) {
             editingIndex = index;
             const r = history[index];
+            document.getElementById('edit-date').value = formatDateForInput(r.timestamp, r.date);
             document.getElementById('edit-muscle').innerHTML = USER_CONFIG.muscles.map(m => `<option value="${m.id}" ${m.id === r.muscle ? 'selected' : ''}>${m.emoji} ${m.name}</option>`).join('');
             const compatible = USER_CONFIG.relations[r.muscle] || [];
             document.getElementById('edit-equipment').innerHTML = USER_CONFIG.equipment.filter(e => compatible.includes(e.id))
@@ -1413,37 +1985,223 @@
 
         function saveEdit() {
             if (editingIndex < 0) return;
+            const dateValue = document.getElementById('edit-date').value;
+            if (!dateValue) {
+                alert('请选择训练日期');
+                return;
+            }
+
             const mId = document.getElementById('edit-muscle').value;
             const eId = document.getElementById('edit-equipment').value;
             const m = USER_CONFIG.muscles.find(x => x.id === mId);
             const e = USER_CONFIG.equipment.find(x => x.id === eId);
+            const previousDate = new Date(Number(history[editingIndex].timestamp));
+            const [year, month, day] = dateValue.split('-').map(Number);
+            const editedDate = new Date(
+                year,
+                month - 1,
+                day,
+                Number.isNaN(previousDate.getTime()) ? 12 : previousDate.getHours(),
+                Number.isNaN(previousDate.getTime()) ? 0 : previousDate.getMinutes(),
+                Number.isNaN(previousDate.getTime()) ? 0 : previousDate.getSeconds(),
+                Number.isNaN(previousDate.getTime()) ? 0 : previousDate.getMilliseconds()
+            );
             history[editingIndex] = {
                 ...history[editingIndex],
+                timestamp: editedDate.getTime(),
+                date: editedDate.toLocaleDateString('zh-CN'),
                 muscle: mId, muscleName: m.name, muscleEmoji: m.emoji,
                 equipment: eId, equipmentName: e.name, equipmentEmoji: e.emoji,
                 duration: parseInt(document.getElementById('edit-duration').value),
                 notes: document.getElementById('edit-notes').value
             };
-            localStorage.setItem('workoutHistory', JSON.stringify(history));
+            history.sort((a, b) => (Number(b.timestamp) || 0) - (Number(a.timestamp) || 0));
+            localStorage.setItem(HISTORY_STORAGE_KEY, JSON.stringify(history));
             closeEditModal();
             updateHistory();
             updateStats();
         }
 
-        function updateStats() {
+        let cumulativeAnimationFrame;
+
+        function getLocalDateKey(date) {
+            const pad = value => String(value).padStart(2, '0');
+            return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
+        }
+
+        function renderActivityHeatmap(records) {
+            const calendar = document.getElementById('activity-calendar');
+            const summary = document.getElementById('activity-summary');
+            const tooltip = document.getElementById('activity-tooltip');
+            if (!calendar || !summary || !tooltip) return;
+
+            // Keep the fixed tooltip in the viewport coordinate system instead of
+            // inheriting positioning/clipping from the statistics card.
+            if (tooltip.parentElement !== document.body) document.body.appendChild(tooltip);
+
+            const dailyActivity = {};
+            records.forEach(record => {
+                const date = new Date(Number(record?.timestamp));
+                if (Number.isNaN(date.getTime())) return;
+                const key = getLocalDateKey(date);
+                const duration = Number(record?.duration);
+                if (!dailyActivity[key]) dailyActivity[key] = { minutes: 0, sessions: 0 };
+                dailyActivity[key].minutes += Number.isFinite(duration) ? Math.max(0, duration) : 0;
+                dailyActivity[key].sessions += 1;
+            });
+
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            const yearStart = new Date(today);
+            yearStart.setDate(yearStart.getDate() - 364);
+            const gridStart = new Date(yearStart);
+            gridStart.setDate(gridStart.getDate() - gridStart.getDay());
+            const gridEnd = new Date(today);
+            gridEnd.setDate(gridEnd.getDate() + (6 - gridEnd.getDay()));
+
+            const days = [];
+            for (const cursor = new Date(gridStart); cursor <= gridEnd; cursor.setDate(cursor.getDate() + 1)) {
+                days.push(new Date(cursor));
+            }
+
+            const weeks = [];
+            for (let index = 0; index < days.length; index += 7) {
+                weeks.push(days.slice(index, index + 7));
+            }
+
+            const monthFormatter = new Intl.DateTimeFormat('zh-CN', { month: 'short' });
+            const dayFormatter = new Intl.DateTimeFormat('zh-CN', {
+                year: 'numeric', month: 'long', day: 'numeric', weekday: 'short'
+            });
+            const formatMinutes = value => value.toLocaleString('zh-CN', { maximumFractionDigits: 2 });
+
+            const monthLabels = weeks.map((week, index) => {
+                const monthStart = week.find(date => date.getDate() === 1 && date >= yearStart && date <= today);
+                const labelDate = index === 0 ? yearStart : monthStart;
+                return `<span class="activity-month-label">${labelDate ? monthFormatter.format(labelDate) : ''}</span>`;
+            }).join('');
+
+            let activeDays = 0;
+            let yearMinutes = 0;
+            const cells = weeks.flatMap(week => week).map(date => {
+                if (date < yearStart || date > today) {
+                    return '<span class="activity-cell activity-cell-outside"></span>';
+                }
+
+                const key = getLocalDateKey(date);
+                const activity = dailyActivity[key] || { minutes: 0, sessions: 0 };
+                const minutes = activity.minutes;
+                if (activity.sessions > 0) activeDays += 1;
+                yearMinutes += minutes;
+                const level = minutes === 0 ? 0 : minutes < 20 ? 1 : minutes < 40 ? 2 : minutes < 60 ? 3 : 4;
+                const detail = activity.sessions > 0
+                    ? `${dayFormatter.format(date)} · ${formatMinutes(minutes)} 分钟 · ${activity.sessions} 次训练`
+                    : `${dayFormatter.format(date)} · 无训练`;
+                return `<span class="activity-cell activity-level-${level}" data-detail="${detail}"></span>`;
+            }).join('');
+
+            calendar.style.setProperty('--week-count', weeks.length);
+            calendar.innerHTML = `
+                <div class="activity-months">${monthLabels}</div>
+                <div class="activity-body">
+                    <div class="activity-weekdays"><span></span><span>一</span><span></span><span>三</span><span></span><span>五</span><span></span></div>
+                    <div class="activity-weeks">${cells}</div>
+                </div>
+            `;
+            summary.textContent = `过去一年训练 ${activeDays} 天`;
+            calendar.setAttribute('aria-label', `过去一年共训练 ${activeDays} 天，累计 ${formatMinutes(yearMinutes)} 分钟`);
+
+            if (!calendar.dataset.tooltipBound) {
+                const positionTooltip = event => {
+                    const gap = 12;
+                    const tooltipRect = tooltip.getBoundingClientRect();
+                    let left = event.clientX + gap;
+                    let top = event.clientY - tooltipRect.height - gap;
+                    if (left + tooltipRect.width > window.innerWidth - 8) {
+                        left = event.clientX - tooltipRect.width - gap;
+                    }
+                    if (top < 8) top = event.clientY + gap;
+                    tooltip.style.left = `${Math.max(8, left)}px`;
+                    tooltip.style.top = `${Math.max(8, top)}px`;
+                };
+
+                const showTooltip = event => {
+                    const cell = event.target.closest('.activity-cell[data-detail]');
+                    if (!cell) return;
+                    tooltip.textContent = cell.dataset.detail;
+                    tooltip.classList.add('show');
+                    positionTooltip(event);
+                };
+
+                calendar.addEventListener('mouseover', showTooltip);
+                calendar.addEventListener('click', showTooltip);
+                calendar.addEventListener('mousemove', event => {
+                    if (tooltip.classList.contains('show')) positionTooltip(event);
+                });
+                calendar.addEventListener('mouseleave', () => tooltip.classList.remove('show'));
+                document.addEventListener('click', event => {
+                    if (!event.target.closest('.activity-cell[data-detail]')) tooltip.classList.remove('show');
+                });
+                calendar.dataset.tooltipBound = 'true';
+            }
+
+            const scrollContainer = calendar.closest('.activity-scroll');
+            requestAnimationFrame(() => {
+                if (scrollContainer) scrollContainer.scrollLeft = scrollContainer.scrollWidth;
+            });
+        }
+
+        function renderCumulativeDuration(total, animate = false) {
+            const totalEl = document.getElementById('stat-total-duration');
+            const cardEl = document.getElementById('cumulative-workout-card');
+            if (!totalEl || !cardEl) return;
+
+            const formatDuration = value => value.toLocaleString('zh-CN', { maximumFractionDigits: 20 });
+
+            cancelAnimationFrame(cumulativeAnimationFrame);
+            cardEl.setAttribute('aria-label', `累计已锻炼 ${formatDuration(total)} 分钟。每一分钟都算数，继续保持！`);
+
+            if (!animate || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                totalEl.textContent = formatDuration(total);
+                return;
+            }
+
+            const startedAt = performance.now();
+            const duration = 850;
+            const tick = (now) => {
+                const progress = Math.min((now - startedAt) / duration, 1);
+                const eased = 1 - Math.pow(1 - progress, 3);
+                totalEl.textContent = progress < 1
+                    ? Math.round(total * eased).toLocaleString('zh-CN')
+                    : formatDuration(total);
+                if (progress < 1) cumulativeAnimationFrame = requestAnimationFrame(tick);
+            };
+            cumulativeAnimationFrame = requestAnimationFrame(tick);
+        }
+
+        function updateStats(animateCumulative = false) {
+            // storage 是统计数据的唯一来源，避免内存中的 history 与持久化记录不一致。
+            history = getStoredHistory();
             const now = new Date();
             const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
             const h3d = history.filter(h => h.timestamp >= startOfToday - 2*86400000);
             const h7d = history.filter(h => h.timestamp >= startOfToday - 6*86400000);
+            const sumDuration = data => data.reduce((sum, item) => {
+                const duration = Number(item?.duration);
+                return sum + (Number.isFinite(duration) ? duration : 0);
+            }, 0);
+
+            renderCumulativeDuration(sumDuration(history), animateCumulative);
+            renderActivityHeatmap(history);
 
             const s3s = document.getElementById('stat-3d-sessions');
             if (s3s) s3s.textContent = h3d.length;
             const s3d = document.getElementById('stat-3d-duration');
-            if (s3d) s3d.textContent = h3d.reduce((s, h) => s + h.duration, 0);
+            if (s3d) s3d.textContent = sumDuration(h3d);
             const s7s = document.getElementById('stat-7d-sessions');
             if (s7s) s7s.textContent = h7d.length;
             const s7d = document.getElementById('stat-7d-duration');
-            if (s7d) s7d.textContent = h7d.reduce((s, h) => s + h.duration, 0);
+            if (s7d) s7d.textContent = sumDuration(h7d);
 
             const m3d = document.getElementById('muscle-distribution-3d');
             const m7d = document.getElementById('muscle-distribution-7d');
@@ -1479,7 +2237,19 @@
             document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
             event.currentTarget.classList.add('active');
             document.getElementById(`${tab}-section`).classList.add('active');
+            if (tab === 'stats') updateStats(true);
+            if (tab === 'history') {
+                history = getStoredHistory();
+                updateHistory();
+            }
         }
+
+        window.addEventListener('storage', event => {
+            if (event.key !== HISTORY_STORAGE_KEY) return;
+            history = getStoredHistory();
+            updateHistory();
+            updateStats();
+        });
 
         // --- Common Helpers ---
         function getDisplayEmoji(type, name, recordEmoji) {
@@ -1512,7 +2282,7 @@
                     if (!Array.isArray(imported)) throw new Error('Invalid format');
                     if (confirm(`成功读取 ${imported.length} 条记录，这会覆盖当前记录，是否继续？`)) {
                         history = imported;
-                        localStorage.setItem('workoutHistory', JSON.stringify(history));
+                        localStorage.setItem(HISTORY_STORAGE_KEY, JSON.stringify(history));
                         updateHistory();
                         updateStats();
                         alert('✅ 导入成功！');
@@ -1524,7 +2294,7 @@
         }
 
         function closeEditModal() { document.getElementById('edit-modal').classList.remove('show'); editingIndex = -1; }
-        function deleteRecord(i) { if(confirm('删除？')){ history.splice(i,1); localStorage.setItem('workoutHistory', JSON.stringify(history)); updateHistory(); updateStats(); } }
+        function deleteRecord(i) { if(confirm('删除？')){ history.splice(i,1); localStorage.setItem(HISTORY_STORAGE_KEY, JSON.stringify(history)); updateHistory(); updateStats(); } }
         function clearFilters() { document.getElementById('filter-search').value=''; document.getElementById('filter-start').value=''; document.getElementById('filter-end').value=''; updateHistory(); }
 
         const TIPS = [
