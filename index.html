@@ -1788,7 +1788,7 @@
         }
 
         // --- 原有逻辑适配 ---
-        let currentMuscleId = USER_CONFIG.muscles[0]?.id || '';
+        let currentMuscleId = '';
         let currentEquipmentId = '';
 
         function fetchBiliTitleJSONP(bvid) {
@@ -1808,12 +1808,16 @@
             });
         }
 
+        function drawRecommendation() {
+            const m = USER_CONFIG.muscles[Math.floor(Math.random() * USER_CONFIG.muscles.length)];
+            currentMuscleId = m?.id || '';
+            const compatible = USER_CONFIG.relations[currentMuscleId] || [];
+            currentEquipmentId = compatible[Math.floor(Math.random() * compatible.length)] || '';
+        }
+
         function rerollMuscle(btn) {
             if (btn) { btn.classList.add('dice-rolling'); setTimeout(() => btn.classList.remove('dice-rolling'), 400); }
-            const m = USER_CONFIG.muscles[Math.floor(Math.random() * USER_CONFIG.muscles.length)];
-            currentMuscleId = m.id;
-            const compatible = USER_CONFIG.relations[m.id] || [];
-            currentEquipmentId = compatible[Math.floor(Math.random() * compatible.length)] || '';
+            drawRecommendation();
             syncRecommendationUI();
         }
 
@@ -1829,17 +1833,23 @@
         function syncRecommendationUI() {
             const m = USER_CONFIG.muscles.find(x => x.id === currentMuscleId);
             const e = USER_CONFIG.equipment.find(x => x.id === currentEquipmentId);
-            if (!m || !e) return;
-            document.getElementById('emoji').textContent = m.emoji;
-            document.getElementById('muscle-group').textContent = m.name;
-            document.getElementById('equipment-emoji').textContent = e.emoji;
-            document.getElementById('equipment-name').textContent = e.name;
+            document.getElementById('emoji').textContent = m?.emoji || '🏋️';
+            document.getElementById('muscle-group').textContent = m?.name || '请先配置部位';
+            document.getElementById('equipment-emoji').textContent = e?.emoji || '🏋️';
+            document.getElementById('equipment-name').textContent = e?.name || '请先关联器械';
             document.getElementById('workout-tip').textContent = TIPS[Math.floor(Math.random() * TIPS.length)];
             updateVideoList(currentMuscleId, currentEquipmentId);
             updateSelects(currentMuscleId, currentEquipmentId);
         }
 
         function updateVideoList(mId, eId) {
+            if (!mId || !eId) {
+                const localContainer = document.getElementById('video-list-local');
+                const exploreContainer = document.getElementById('video-list-explore');
+                if (localContainer) localContainer.innerHTML = '<div class="empty-state">请前往“我的配置”设置部位及关联器械。</div>';
+                if (exploreContainer) exploreContainer.innerHTML = '';
+                return;
+            }
             const key = `${mId}-${eId}`;
             const localVideos = USER_CONFIG.videos[key] || [];
             const mName = USER_CONFIG.muscles.find(x => x.id === mId)?.name || '';
@@ -2550,6 +2560,7 @@
         }
 
         // Initial Run
+        drawRecommendation();
         refreshAllUI();
         initHeightSync();
     </script>
